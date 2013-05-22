@@ -47,7 +47,7 @@ class Inleveren extends CI_Controller
 				if(!$isdelivered)
 				{
 					$this->load->view('templates/header', $data);
-					$this->load->view('templates/menu', $data);
+					//$this->load->view('templates/menu', $data);
 					//$results = array('results' => $this->user->enroledsubjects($data['username']));
 					$data['subjectid'] = $subjectid;
 					$data['error'] = ' ';
@@ -59,6 +59,45 @@ class Inleveren extends CI_Controller
 				else
 				{
 					echo("<script>alert('Al ingeleverd!');</script>");
+					redirect('inleveren', 'refresh');
+				}
+			}
+			else
+			{
+				redirect('login', 'refresh');
+			}
+		}
+		else
+		{
+			redirect($subjectid, 'refresh');
+		}
+	}
+	function edit($subjectid)
+	{
+		if(is_numeric($subjectid))
+		{
+			if($this->session->userdata('logged_in'))
+			{
+				$session_data = $this->session->userdata('logged_in');
+				$data['username'] = $session_data['username'];
+				$username = $data['username'];
+				$data['title'] = "Aanpassen";
+				$rolename = $session_data['role'];
+				$data['rolename'] = $rolename;
+				$data['version'] = 1;
+				$isdelivered = $this->user->isalreadysend($username,$subjectid);
+				if($isdelivered)
+				{
+					$this->load->view('templates/header', $data);
+					//$this->load->view('templates/menu', $data);
+					$data['subjectid'] = $subjectid;
+					$data['error'] = ' ';
+					$this->load->view('inleveren_view', $data);
+					$this->load->view('templates/footer', $data);
+				}
+				else
+				{
+					echo("<script>alert('Hier ging even wat mis, we gaan even terug naar de vorige pagina.');</script>");
 					redirect('inleveren', 'refresh');
 				}
 			}

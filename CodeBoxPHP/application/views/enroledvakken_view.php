@@ -11,7 +11,7 @@ Welkom, deze vakken zijn beschikbaar voor uw opleiding.
 		$alreadysend = $this->user->isalreadysend($username,$row->subjectID);
 		if($alreadysend)
 		{
-			echo "<li>$vaknaam - Voldaan</li>";
+			echo "<li>$vaknaam - Voldaan. [<a href='inleveren/edit/$row->subjectID/'>aanpassen</a>]</li>";
 		}
 		else
 		{
