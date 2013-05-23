@@ -5,7 +5,7 @@
 	$count = 0;
 	foreach($result as $row)
 	{
-		echo("<li><a href='../../../overzicht/subject/$studyid/$classid/$row->id'>$row->username</a></li>");
+		echo("<li><a href='../../../overzicht/student/$studyid/$classid/$row->id'>$row->username</a></li>");
 		$count++;
 	}
 	if($count == 0)

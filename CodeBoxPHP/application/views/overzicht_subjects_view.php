@@ -8,13 +8,13 @@
 	{
 		$vaknaam = $row->name;
 		$alreadysend = $this->user->isalreadysend($student_name,$row->subjectID);
-		if($alreadysend)
+		if(!$alreadysend)
 		{
-			echo "<li>$vaknaam - Voldaan.</li>";
+			echo "<li>$vaknaam - Niet voldaan.</li>";
 		}
 		else
 		{
-			echo "<li><a href='nadertespecifieren'>$vaknaam - Niet voldaan!</a></li>";
+			echo "<li><a href='../../../../overzicht/subject/$studyid/$classid/$studentid/$row->subjectID'>$vaknaam - Download bestand.</a></li>";
 		}
 		$count++;
     }

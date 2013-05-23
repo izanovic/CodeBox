@@ -111,25 +111,50 @@ class Inleveren extends CI_Controller
 			redirect($subjectid, 'refresh');
 		}
 	}
+	/*
+	function assignment($subjectid,$assignmentid)
+	{
+		if(is_numeric($subjectid) && is_numeric($assignmentid))
+		{
+			$data['title'] = "Inleveren";
+			if($this->session->userdata('logged_in'))
+			{
+				$session_data = $this->session->userdata('logged_in');
+				$data['username'] = $session_data['username'];
+				$rolename = $session_data['role'];
+				$data['rolename'] = $rolename;
+				$this->load->view('templates/header', $data);
+				$this->load->view('templates/menu', $data);
+				$data['subjectid'] = $subjectid;
+				$data['assignmentid'] = $assignmentid;
+				$data['version'] = 1;
+				$data['error'] = ' ';
+				//$results = array('results' => $this->user->enroledsubjects($data['username']));
+				//new page listing all assignments of the specified subject will come here.
+				$this->load->view('inleveren_view', $data);
+				$this->load->view('templates/footer', $data);
+			}
+			else
+			{
+				redirect('login', 'refresh');
+			}
+		}
+		else
+		{
+			redirect('inleveren', 'refresh');
+		}
+	}
+	*/
 	function do_upload($subject,$username,$version)
 	{
-		$query = $this->db->query("SELECT Shortname FROM subject WHERE SubjectID = '$subject'");
-		$result = $query->result();
-		$subjectname = "";
-		foreach($result as $row)
-		{
-			$subjectname = $row->Shortname;
-			break;
-		}
 		$config['upload_path'] = 'files/';
 		$config['allowed_types'] = '*';
 		$config['max_size']	= '0';
-		$config['file_name'] = $subjectname . "_" . $username . "_" . $version;
+		$config['file_name'] = $subject . "_" . $username . "_" . $version;
 		$data['title'] = 'Inleveren';
 		$this->load->library('upload', $config);
 		if ( ! $this->upload->do_upload())
 		{
-			$data['title'] = 'Inleveren - Fout';
 			$data['error'] = $this->upload->display_errors();
 			$session_data = $this->session->userdata('logged_in');
 			$data['username'] = $session_data['username'];
@@ -144,9 +169,8 @@ class Inleveren extends CI_Controller
 		}
 		else
 		{
-			$data['title'] = 'Inleveren - voltooid';
 			$uploadarr = $this->upload->data();
-			$data['upload_data'] = $this->upload->data();
+			$data = array('upload_data' => $this->upload->data());
 			$session_data = $this->session->userdata('logged_in');
 			$data['username'] = $session_data['username'];
 			$rolename = $session_data['role'];
@@ -156,22 +180,7 @@ class Inleveren extends CI_Controller
 			$this->load->view('templates/footer', $data);
 			$userid = $this->user->getuserid($data['username']);
 			$file = $uploadarr['full_path'];
-			$checkquery = $this->db->query("SELECT * FROM files WHERE ownerid = '$userid' AND subjectid = '$subject'");
-			$querycount = 0;
-			$fileid = -1;
-			foreach($checkquery->result() as $row)
-			{
-				$fileid = $row->id;
-				$querycount++;
-			}
-			if($querycount > 0)
-			{
-				$query = $this->db->query("UPDATE files SET location='$file',ownerid='$userid',subjectid='$subject',version='$version' WHERE id = '$fileid'");
-			}
-			else
-			{
-				$query = $this->db->query("INSERT INTO files (location, ownerid, subjectid, viewed, version) VALUES ('$file','$userid','$subject',0, '$version')");
-			}
+			$query = $this->db->query("INSERT INTO files (location, ownerid, subjectid, viewed) VALUES ('$file','$userid','$subject',0)");
 			//$result = $query->result();
 			if(!$query)
 			{

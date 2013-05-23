@@ -7,6 +7,7 @@ class Overzicht extends CI_Controller
 		parent::__construct();
 		$this->load->model('globalfunc','',TRUE);
 		$this->load->model('user','',TRUE);
+		$this->load->helper('download');
 	}
 	function index()
 	{
@@ -89,7 +90,7 @@ class Overzicht extends CI_Controller
 			redirect('overzicht', 'refresh');
 		}
 	}
-	function subject($studyid,$classid,$studentid)
+	function student($studyid,$classid,$studentid)
 	{
 		if(is_numeric($studyid) && is_numeric($classid) && is_numeric($studentid))
 		{
@@ -102,9 +103,44 @@ class Overzicht extends CI_Controller
 				$rolename = $session_data['role'];
 				$data['rolename'] = $rolename;
 				$data['studyid'] = $studyid;
+				$data['classid'] = $classid;
+				$data['studentid'] = $studentid;
 				$this->load->view('templates/header', $data);
 				$this->load->view('templates/menu', $data);
 				$this->load->view('overzicht_subjects_view', $data);
+				$this->load->view('templates/footer', $data);
+			}
+			else
+			{
+				redirect('login', 'refresh');
+			}
+		}
+		else
+		{
+			redirect('overzicht', 'refresh');
+		}
+	}
+	function subject($studyid,$classid,$studentid,$subjectid)
+	{
+		if(is_numeric($studyid) && is_numeric($classid) && is_numeric($studentid) && is_numeric($subjectid))
+		{
+			if($this->session->userdata('logged_in'))
+			{
+				$data['student_name'] = $this->globalfunc->getstudentnamefromid($studentid);
+				$data['subject_name'] = $this->globalfunc->getsubjectnamefromid($subjectid);
+				$data['title'] = "Overzicht - " . $this->globalfunc->getstudynamefromid($studyid) . " / " .  $this->globalfunc->getclassnamefromid($classid) . " / " . $data['student_name'] . " / " . $data['subject_name'];
+				$session_data = $this->session->userdata('logged_in');
+				$data['username'] = $session_data['username'];
+				$rolename = $session_data['role'];
+				$data['rolename'] = $rolename;
+				$data['studyid'] = $studyid;
+				$data['classid'] = $classid;
+				$data['studentid'] = $studentid;
+				$data['subjectid'] = $subjectid;
+				$data['short_subject_name'] = $this->globalfunc->getshortsubjectnamefromid($subjectid);
+				$this->load->view('templates/header', $data);
+				$this->load->view('templates/menu', $data);
+				$this->load->view('overzicht_download_view', $data);
 				$this->load->view('templates/footer', $data);
 			}
 			else

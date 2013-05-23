@@ -22,6 +22,22 @@ Class Globalfunc extends CI_Model
 			return $row->username;
 		}
 	}
+	function getsubjectnamefromid($subjectid)
+	{
+		$query = $this->db->query("SELECT name FROM subject WHERE subjectid = '$subjectid'");
+		foreach($query->result() as $row)
+		{
+			return $row->name;
+		}
+	}
+	function getshortsubjectnamefromid($subjectid)
+	{
+		$query = $this->db->query("SELECT shortname FROM subject WHERE subjectid = '$subjectid'");
+		foreach($query->result() as $row)
+		{
+			return $row->shortname;
+		}
+	}
 	function getclassnamefromid($classid)
 	{
 		$query = $this->db->query("SELECT name FROM class WHERE id = '$classid'");
