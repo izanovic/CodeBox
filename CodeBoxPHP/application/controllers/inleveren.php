@@ -129,6 +129,7 @@ class Inleveren extends CI_Controller
 		$this->load->library('upload', $config);
 		if ( ! $this->upload->do_upload())
 		{
+			$data['title'] = 'Inleveren - Fout';
 			$data['error'] = $this->upload->display_errors();
 			$session_data = $this->session->userdata('logged_in');
 			$data['username'] = $session_data['username'];
@@ -143,8 +144,9 @@ class Inleveren extends CI_Controller
 		}
 		else
 		{
+			$data['title'] = 'Inleveren - voltooid';
 			$uploadarr = $this->upload->data();
-			$data = array('upload_data' => $this->upload->data());
+			$data['upload_data'] = $this->upload->data();
 			$session_data = $this->session->userdata('logged_in');
 			$data['username'] = $session_data['username'];
 			$rolename = $session_data['role'];
@@ -154,7 +156,22 @@ class Inleveren extends CI_Controller
 			$this->load->view('templates/footer', $data);
 			$userid = $this->user->getuserid($data['username']);
 			$file = $uploadarr['full_path'];
-			$query = $this->db->query("INSERT INTO files (location, ownerid, subjectid, viewed) VALUES ('$file','$userid','$subject',0)");
+			$checkquery = $this->db->query("SELECT * FROM files WHERE ownerid = '$userid' AND subjectid = '$subject'");
+			$querycount = 0;
+			$fileid = -1;
+			foreach($checkquery->result() as $row)
+			{
+				$fileid = $row->id;
+				$querycount++;
+			}
+			if($querycount > 0)
+			{
+				$query = $this->db->query("UPDATE files SET location='$file',ownerid='$userid',subjectid='$subject',version='$version' WHERE id = '$fileid'");
+			}
+			else
+			{
+				$query = $this->db->query("INSERT INTO files (location, ownerid, subjectid, viewed, version) VALUES ('$file','$userid','$subject',0, '$version')");
+			}
 			//$result = $query->result();
 			if(!$query)
 			{
