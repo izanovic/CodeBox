@@ -46,6 +46,19 @@ Class User extends CI_Model
 	}
 	function isalreadysend($username,$subjectid)
 	{
+		$this->load->model('globalfunc','',TRUE);
+		$short_name = $this->globalfunc->getshortsubjectnamefromid($subjectid);
+		$filename = $short_name . "_" . $username . "_";
+		$result = glob("files/$filename*.*");
+		if(count($result) > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		/*
 		$query = $this -> db -> query("SELECT * FROM files,users WHERE files.ownerid = users.id AND users.username = '$username' AND files.subjectid = '$subjectid'");
 		$result = $query->num_rows();
 		if($result == 0)
@@ -56,6 +69,7 @@ Class User extends CI_Model
 		{
 			return true;
 		}
+		*/
 	}
 	function getstudyid($username)
 	{

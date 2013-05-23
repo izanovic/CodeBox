@@ -4,19 +4,32 @@
 <?php
 	if($rolename == 'docent' || $rolename == "administrator")
 	{
+		$fileformat = $short_subject_name . "_" . $student_name . "_";
+		$result = glob ("files/$fileformat*.*");
 		$version = 1;
-		$fileformat = $short_subject_name . "_" . $student_name . "_" . $version;
-		$query = $this->db->query("SELECT location FROM files WHERE location LIKE '%$fileformat.%'");
 		$ext = "";
-		foreach($query->result() as $row)
+		foreach($result as $row)
 		{
-			$loc = $row->location;
-			$ext = explode('.',$loc);
-			$ext = $ext[1];
+			$str = explode('_',$row);
+			$version = $str[2];
 		}
-		$data = file_get_contents("files/" . $fileformat . "." . $ext);
-		$name = $fileformat . "." . $ext;
-		force_download($name, $data);
+		$fileformat = $short_subject_name . "_" . $student_name . "_" . $version;
+		$result2 = glob ("files/$fileformat.*");
+		foreach($result2 as $row)
+		{
+			$str = explode('.',$row);
+			$ext = $str[1];
+		}
+		if(file_exists("files/$fileformat.$ext"))
+		{
+			$data = file_get_contents("files/" . $fileformat . "." . $ext);
+			$name = $fileformat . "." . $ext;
+			force_download($name, $data);
+		}
+		else
+		{
+			echo("Oeps dit bestand bestaat niet!");
+		}
 	}
 ?>
 </div>
