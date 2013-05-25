@@ -30,6 +30,17 @@ Class Globalfunc extends CI_Model
 			return $row->name;
 		}
 	}
+	function expiredsubject($subjectid)
+	{
+		if($this->todaydateindbformat() >= $this->getexpiredatafromdb($subjectid))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	function getshortsubjectnamefromid($subjectid)
 	{
 		$query = $this->db->query("SELECT shortname FROM subject WHERE subjectid = '$subjectid'");
@@ -37,6 +48,22 @@ Class Globalfunc extends CI_Model
 		{
 			return $row->shortname;
 		}
+	}
+	function todaydateindbformat()
+	{
+		date_default_timezone_set('Europe/Amsterdam');
+		$date = date('d-m-Y h:i:s a', time());
+		$ts2 = date_create($date)->format('U');
+		return $ts2;
+	}
+	function getexpiredatafromdb($subjectid)
+	{
+		$query = $this->db->query("SELECT expire FROM subject WHERE subjectid = '$subjectid' LIMIT 1");
+		foreach($query->result() as $row)
+		{
+			return $row->expire;
+		}
+		return -1;
 	}
 	function getclassnamefromid($classid)
 	{

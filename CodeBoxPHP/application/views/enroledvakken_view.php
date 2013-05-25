@@ -9,13 +9,21 @@ Welkom, deze vakken zijn beschikbaar voor uw opleiding.
 	{
 		$vaknaam = $row->name;
 		$alreadysend = $this->user->isalreadysend($username,$row->subjectID);
-		if($alreadysend)
+		$isexpired = $this->globalfunc->expiredsubject($row->subjectID);
+		if(!$isexpired)
 		{
-			echo "<li>$vaknaam - Voldaan. [<a href='inleveren/edit/$row->subjectID/'>aanpassen</a>]</li>";
+			if($alreadysend)
+			{
+				echo "<li>$vaknaam - Voldaan. [<a href='inleveren/edit/$row->subjectID/'>aanpassen</a>]</li>";
+			}
+			else
+			{
+				echo "<li><a href='inleveren/vak/$row->subjectID'>$vaknaam - Niet voldaan!</a></li>";
+			}
 		}
 		else
 		{
-			echo "<li><a href='inleveren/vak/$row->subjectID'>$vaknaam - Niet voldaan!</a></li>";
+			echo("<li>$vaknaam - Deadline is overschreden.</li>");
 		}
 		$count++;
     }
