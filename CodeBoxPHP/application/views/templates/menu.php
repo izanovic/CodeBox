@@ -5,6 +5,8 @@
 			<li><a href="inleveren">Inleveren</a></li>
 			<li><a href="overzicht">Overzicht</a></li>
 			<li><a href="profiel">Mijn Profiel</a></li>
-			<li><a href="administratie">Administratie</a></li>
+		<?php if($rolename == 'docent' || $rolename == 'administrator'){		
+			echo("<li><a href='administratie'>Beheer</a></li>");
+		} ?>
 			<li><a href="logout">Uitloggen</a></li>
 		</ul>

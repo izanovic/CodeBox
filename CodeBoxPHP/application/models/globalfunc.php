@@ -41,6 +41,23 @@ Class Globalfunc extends CI_Model
 			return false;
 		}
 	}
+	function subjectexists($subjectid)
+	{
+		$query = $this->db->query("SELECT * FROM subject WHERE subjectid = '$subjectid'");
+		$count = 0;
+		foreach($query->result() as $row)
+		{
+			$count++;
+		}
+		if($count > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	function getshortsubjectnamefromid($subjectid)
 	{
 		$query = $this->db->query("SELECT shortname FROM subject WHERE subjectid = '$subjectid'");

@@ -36,24 +36,31 @@ class Inleveren extends CI_Controller
 			$data['title'] = "Inleveren";
 			if($this->session->userdata('logged_in'))
 			{
-				$session_data = $this->session->userdata('logged_in');
-				$data['username'] = $session_data['username'];
-				$username = $data['username'];
-				$rolename = $session_data['role'];
-				$data['rolename'] = $rolename;
-				$data['version'] = 1;
-				$isdelivered = $this->user->isalreadysend($username,$subjectid);
-				if(!$isdelivered)
+				if(!$this->globalfunc->expiredsubject($subjectid) && $this->globalfunc->subjectexists($subjectid))
 				{
-					$this->load->view('templates/header', $data);
-					$data['subjectid'] = $subjectid;
-					$data['error'] = ' ';
-					$this->load->view('inleveren_view', $data);
-					$this->load->view('templates/footer', $data);
+					$session_data = $this->session->userdata('logged_in');
+					$data['username'] = $session_data['username'];
+					$username = $data['username'];
+					$rolename = $session_data['role'];
+					$data['rolename'] = $rolename;
+					$data['version'] = 1;
+					$isdelivered = $this->user->isalreadysend($username,$subjectid);
+					if(!$isdelivered)
+					{
+						$this->load->view('templates/header', $data);
+						$data['subjectid'] = $subjectid;
+						$data['error'] = ' ';
+						$this->load->view('inleveren_view', $data);
+						$this->load->view('templates/footer', $data);
+					}
+					else
+					{
+						echo("<script>alert('Al ingeleverd!');</script>");
+						redirect('inleveren', 'refresh');
+					}
 				}
 				else
 				{
-					echo("<script>alert('Al ingeleverd!');</script>");
 					redirect('inleveren', 'refresh');
 				}
 			}

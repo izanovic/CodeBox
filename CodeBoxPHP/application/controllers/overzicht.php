@@ -7,7 +7,6 @@ class Overzicht extends CI_Controller
 		parent::__construct();
 		$this->load->model('globalfunc','',TRUE);
 		$this->load->model('user','',TRUE);
-		$this->load->helper('download');
 	}
 	function index()
 	{
@@ -26,6 +25,9 @@ class Overzicht extends CI_Controller
 			}
 			else
 			{
+				$date = new DateTime();
+				$date->setTimestamp($this->globalfunc->todaydateindbformat());
+				$data['datenow'] = $date->format('d/m/Y H:i:s');
 				$this->load->view('overzicht_student_view', $data);
 			}
 			$this->load->view('templates/footer', $data);

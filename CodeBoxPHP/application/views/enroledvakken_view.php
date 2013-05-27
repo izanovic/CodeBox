@@ -18,12 +18,12 @@ Welkom, deze vakken zijn beschikbaar voor uw opleiding.
 			}
 			else
 			{
-				echo "<li><a href='inleveren/vak/$row->subjectID'>$vaknaam - Niet voldaan!</a></li>";
+				echo "<li>$vaknaam - Niet voldaan! <a href='inleveren/vak/$row->subjectID'>[Inleveren]</a></li>";
 			}
 		}
 		else
 		{
-			echo("<li>$vaknaam - Deadline is overschreden.</li>");
+			echo("<li>$vaknaam - Deadline is overschreden. [Inleveren niet mogelijk]</li>");
 		}
 		$count++;
     }
