@@ -6,6 +6,7 @@ class Home extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('role','',TRUE);
+		$this->load->model('user','',TRUE);
 	}
 	function index()
 	{

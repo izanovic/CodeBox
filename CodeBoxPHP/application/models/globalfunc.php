@@ -13,7 +13,7 @@ Class Globalfunc extends CI_Model
 		{
 			return $row->name;
 		}
-	}
+	}/*
 	function getstudentnamefromid($studentid)
 	{
 		$query = $this->db->query("SELECT username FROM users WHERE id = '$studentid'");
@@ -21,7 +21,7 @@ Class Globalfunc extends CI_Model
 		{
 			return $row->username;
 		}
-	}
+	}*/
 	function getsubjectnamefromid($subjectid)
 	{
 		$query = $this->db->query("SELECT name FROM subject WHERE subjectid = '$subjectid'");

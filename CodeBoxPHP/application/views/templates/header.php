@@ -64,4 +64,4 @@
 	</style>
 	</head>
 	<body>
-		<h1>Codebox - Welkom <?php echo $username ?> u bent ingelogd als <?php echo $rolename ?></h1>
+		<h1>Codebox - Welkom, u bent ingelogd als <?php echo $rolename ?></h1>

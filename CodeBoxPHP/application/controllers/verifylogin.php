@@ -30,15 +30,12 @@ class VerifyLogin extends CI_Controller
 		if($result)
 		{
 			$sess_array = array();
-			foreach($result as $row)
-			{
-				$sess_array = array(
-				'id' => $row->id,
-				'username' => $row->username,
-				'role' => $this->role->rolename($row->roleid)
+			$sess_array = array(
+				//'id' => $row->id,
+				'username' => $username,
+				'role' => $this->user->getrolefromldap($username)
 				);
-				$this->session->set_userdata('logged_in', $sess_array);
-			}
+			$this->session->set_userdata('logged_in', $sess_array);
 			return true;
 		}
 		else

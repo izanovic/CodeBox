@@ -16,6 +16,7 @@ class Inleveren extends CI_Controller
 		{
 			$session_data = $this->session->userdata('logged_in');
 			$data['username'] = $session_data['username'];
+			$this->user->getfullnamefromldap($session_data['username']);
 			$rolename = $session_data['role'];
 			$data['rolename'] = $rolename;
 			$this->load->view('templates/header', $data);
