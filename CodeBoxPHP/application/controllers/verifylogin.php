@@ -29,15 +29,36 @@ class VerifyLogin extends CI_Controller
 		$result = $this->user->login($username, $password);
 		if($result)
 		{
-			$sess_array = array();
-			$sess_array = array(
-				//'id' => $row->id,
-				'username' => $username,
-				'role' => $this->user->getrolefromldap($username)
-				);
-			$this->session->set_userdata('logged_in', $sess_array);
-			return true;
-		}
+			if(count($result) == 1) //admin auth
+			{
+				foreach($result as $row)
+				{
+					$sess_array = array
+					(
+						'username' => $username,
+						'role' => 'administrator'
+					);
+					$this->session->set_userdata('logged_in', $sess_array);
+					return true;
+				}
+			}
+			else if(count($result) == 2) //ldap auth
+			{
+				$sess_array = array();
+				$sess_array = array(
+					//'id' => $row->id,
+					'username' => $username,
+					'role' => $this->user->getrolefromldap($username)
+					);
+				$this->session->set_userdata('logged_in', $sess_array);
+				$this->user->adduserifnotexists($username);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}	
 		else
 		{
 			$this->form_validation->set_message('check_database', 'Wachtwoord en/of gebruikersnaam is onjuist!');

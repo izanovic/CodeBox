@@ -3,74 +3,69 @@ Class User extends CI_Model
 {
 	function login($username, $password)
 	{
-/*
-		$this -> db -> select('id, username, password, roleid');
-		$this -> db -> from('users');
-		$this -> db -> where('username', $username);
-		$this -> db -> where('password', SHA1($password));
-		$this -> db -> limit(1);
-		$query = $this -> db -> get();
+		$admincheck = explode('_',$username);
+		if($admincheck[0] == "admin")
+		{
+			$this -> db -> select('username, password');
+			$this -> db -> from('users');
+			$this -> db -> where('username', $username);
+			$this -> db -> where('password', SHA1($password));
+			$this -> db -> limit(1);
+			$query = $this -> db -> get();
 
-	    if($query -> num_rows() == 1)
-	    {
-			return $query->result();
-	    }
-	    else
-	    {
-			return false;
-	    }
-
-		$this->config->load('ldap',true);
-		$ldap_ip = "141.252.8.105";//$this->config->item('ldap_ip');
-		$ldap_port = 380;//$this->config->item('ldap_port');
-		$ldapconnection = ldap_connect($ldap_ip,$ldap_port);
-        if(!$ldapconnection)
-        {
-			return false;
-        }
+		    if($query -> num_rows() == 1)
+		    {
+				return $query->result();
+		    }
+		    else
+		    {
+				return false;
+		    }
+		}
 		else
-        {
-            ldap_set_option($ldapconnection, LDAP_OPT_REFERRALS, 0);
-            ldap_set_option($ldapconnection, LDAP_OPT_PROTOCOL_VERSION, 3);
-            $result = ldap_bind($ldapconnection);
-            if($result)
-            {
-				return true;
-            }
-            else
-            {
+		{
+			$connection = @ldap_connect('ldapmaster.nhl.nl',380) or die(ldap_error());
+			if($connection)
+			{
+				ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+				ldap_bind($connection);
+			}
+			else
+			{
+				return false;
+				die('Could not connect to LDAP server');
+			}
+
+			$search = ldap_search($connection,'o=Noordelijke Hogeschool Leeuwarden,c=nl',"uid=" . $username);
+			$result = ldap_get_entries($connection,$search);
+			$ldapUserString = $result[0]['dn'];
+			$ldapResult = ldap_bind($connection,$ldapUserString,$password);
+			$ldapAuthInfo = ($ldapResult? $result : false);
+			if(count($ldapAuthInfo) < 2)
+			{
 				return false;
 			}
-      	}
-      	ldap_close($ldapconnection);
-      	*/
-		$connection = @ldap_connect('ldapmaster.nhl.nl',380) or die(ldap_error());
-		if($connection)
-		{
-			ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
-			ldap_bind($connection);
-		}
-		else
-		{
-			return false;
-			die('Could not connect to LDAP server');
-		}
-
-		$search = ldap_search($connection,'o=Noordelijke Hogeschool Leeuwarden,c=nl',"uid=" . $username);
-		$result = ldap_get_entries($connection,$search);
-		$ldapUserString = $result[0]['dn'];
-		$ldapResult = ldap_bind($connection,$ldapUserString,$password);
-		$ldapAuthInfo = ($ldapResult? $result : false);
-		if(count($ldapAuthInfo) < 2)
-		{
-			return false;
-		}
-		else
-		{
-			return $ldapAuthInfo;
+			else
+			{
+				return $ldapAuthInfo;
+			}
 		}
 	}
-	function getfullnamefromldap($username)
+	function userexitsindatabase($username)
+	{
+		$query = $this->db->query("SELECT * FROM users WHERE username = '$username'");
+		$result = $query->result();
+		if(count($result) == 1)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+
+	}
+	function getstudyfromldap($username)
 	{
 		$connection = @ldap_connect('ldapmaster.nhl.nl',380) or die(ldap_error());
 		if($connection)
@@ -82,27 +77,76 @@ Class User extends CI_Model
 		{
 			die('Could not connect to LDAP server');
 		}
-		$attributes = array("cn");
-		$search = ldap_search($connection,'o=Noordelijke Hogeschool Leeuwarden,c=nl',"uid=" . $username, $attributes);
-		$result = ldap_get_entries($connection,$search);
-/*
-		array(2) 
-		{ 
-			["count"]=> int(1) [0]=> 
-				array(4) 
-				{ 
-					["cn"]=> array(3) 
-					{ 
-						["count"]=> int(2) [0]=> string(20) "leps1200 - lepstra s" [1]=> string(9) "s lepstra" 
-					} 
-					[0]=> string(2) "cn" ["count"]=> int(1) ["dn"]=> string(118) "cn=leps1200 - lepstra s,ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,o=Noordelijke Hogeschool Leeuwarden,c=nl" 
-				} 
-	} 
-*/
-		$str = $result[0]["cn"][0];
-		$strname = explode("-",$str);
-		$name = $strname[1];
-		return $name;
+		$dn = "ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,o=Noordelijke Hogeschool Leeuwarden,c=nl";
+		$filter = "uid=" . $username;
+		$search = ldap_search($connection, $dn, $filter) or die ("Search failed");
+		$entries = ldap_get_entries($connection, $search);
+		return $entries[0]["ou"][0];
+	}
+	function studyexists($studyname)
+	{
+		$query = $this->db->query("SELECT id FROM study WHERE name = '$studyname' LIMIT 1");
+		$result = $query->result();
+		if(count($result) > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	function userexists($username)
+	{
+		$query = $this->db->query("SELECT * FROM users WHERE username = '$username' LIMIT 1");
+		$result = $query->result();
+		if(count($result) > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	function adduserifnotexists($username)
+	{
+		if(!$this->userexists($username))
+		{
+			$studyname = $this->getstudyfromldap($username);
+			$studyid = -1;
+			if(!$this->studyexists($studyname))
+			{
+				$this->db->query("INSERT INTO study (name) VALUES ('$studyname')");
+			}
+			$query = $this->db->query("SELECT id FROM study WHERE name = '$studyname' LIMIT 1");
+			$result = $query->result();
+			foreach($result as $row)
+			{
+				$studyid = $row->id;
+			}
+			$query = $this->db->query("INSERT INTO users (username,password,studyid) VALUES ('$username','geen wachtwoord','$studyid')");
+		}
+	}
+	function getfullnamefromldap($username)
+	{
+		$splittest = explode('_',$username);
+		if($splittest[0] == "admin") return $splittest[1];
+		$connection = @ldap_connect('ldapmaster.nhl.nl',380) or die(ldap_error());
+		if($connection)
+		{
+			ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+			ldap_bind($connection);
+		}
+		else
+		{
+			die('Could not connect to LDAP server');
+		}
+		$dn = "ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,o=Noordelijke Hogeschool Leeuwarden,c=nl";
+		$filter = "uid=" . $username;
+		$search = ldap_search($connection, $dn, $filter) or die ("Search failed");
+		$entries = ldap_get_entries($connection, $search);
+		return $entries[0]["cn"][0];
 	}
 	function getrolefromldap($username)
 	{
@@ -119,16 +163,7 @@ Class User extends CI_Model
 		}
 		$attributes = array("dn");
 		$search = ldap_search($connection,'o=Noordelijke Hogeschool Leeuwarden,c=nl',"uid=" . $username , $attributes);
-		$result = ldap_get_entries($connection,$search);/*
-		array(2) 
-		{ 
-			["count"]=> int(1) 
-			[0]=> array(2) 
-				{ 
-					["count"]=> int(0) 
-					["dn"]=> string(118) "cn=leps1200 - lepstra s,ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,o=Noordelijke Hogeschool Leeuwarden,c=nl" 
-				} 
-		} */
+		$result = ldap_get_entries($connection,$search);
 
 		$str = $result[0]["dn"];
 		$strrole = explode(',',$str)[4];
@@ -138,9 +173,16 @@ Class User extends CI_Model
 	}
 	function isalreadysend($username,$subjectid)
 	{
+		$user = $username;
+		$splittest = explode('_',$username);
+		if($splittest[0] == "admin")
+		{
+			$user = $splittest[1];
+		}
+
 		$this->load->model('globalfunc','',TRUE);
 		$short_name = $this->globalfunc->getshortsubjectnamefromid($subjectid);
-		$filename = $short_name . "_" . $username . "_";
+		$filename = $short_name . "_" . $user . "_";
 		$result = glob("files/$filename*.*");
 		if(count($result) > 0)
 		{
@@ -150,32 +192,16 @@ Class User extends CI_Model
 		{
 			return false;
 		}
-		/*
-		$query = $this -> db -> query("SELECT * FROM files,users WHERE files.ownerid = users.id AND users.username = '$username' AND files.subjectid = '$subjectid'");
-		$result = $query->num_rows();
-		if($result == 0)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-		*/
 	}
 	function getstudyid($username)
 	{
 		$studyid = -1;
-		$this -> db -> select('studyid');
-		$this -> db -> from('users');
-		$this -> db -> where('username', $username);
-		$query = $this -> db -> get();
-		$this -> db -> limit(1);
-		foreach ($query->result() as $row)
+		$query = $this->db->query("SELECT id FROM study,users WHERE study.id = users.studyid AND users.username = '$username'");
+		$result = $query->result();
+		foreach($result as $row)
 		{
-			$studyid = $row->studyid;
+			$studyid = $row->id;
 		}
-		$query->free_result();
 		return $studyid;
 	}
 	/*
@@ -197,11 +223,6 @@ Class User extends CI_Model
 	function subjects($username)
 	{
 		$studyid = $this->getstudyid($username);
-		/*
-		$this -> db -> select('subjectID');
-		$this -> db -> from('enroles');
-		$this -> db -> where('userID', $userid);
-		$subjectquery = $this->db->get();*/
 		$subjectquery = $this->db->query("SELECT subjectID,shortname,name FROM subject WHERE studyid = '$studyid' ORDER BY name ASC");
 		return $subjectquery->result();
 	}

@@ -37,7 +37,7 @@ class Overzicht extends CI_Controller
 			redirect('login', 'refresh');
 		}
 	}
-	function sclass($studyid)
+	function students($studyid)
 	{
 		if(is_numeric($studyid))
 		{
@@ -49,34 +49,6 @@ class Overzicht extends CI_Controller
 				$rolename = $session_data['role'];
 				$data['rolename'] = $rolename;
 				$data['studyid'] = $studyid;
-				$this->load->view('templates/header', $data);
-				$this->load->view('templates/menu', $data);
-				$this->load->view('overzicht_class_view', $data);
-				$this->load->view('templates/footer', $data);
-			}
-			else
-			{
-				redirect('login', 'refresh');
-			}
-		}
-		else
-		{
-			redirect($studyid, 'refresh');
-		}
-	}
-	function students($studyid,$classid)
-	{
-		if(is_numeric($studyid) && is_numeric($classid))
-		{
-			$data['title'] = "Overzicht - " . $this->globalfunc->getstudynamefromid($studyid) . " / " . $this->globalfunc->getclassnamefromid($classid);
-			if($this->session->userdata('logged_in'))
-			{
-				$session_data = $this->session->userdata('logged_in');
-				$data['username'] = $session_data['username'];
-				$rolename = $session_data['role'];
-				$data['rolename'] = $rolename;
-				$data['studyid'] = $studyid;
-				$data['classid'] = $classid;
 				$this->load->view('templates/header', $data);
 				$this->load->view('templates/menu', $data);
 				$this->load->view('overzicht_students_view', $data);
@@ -92,21 +64,20 @@ class Overzicht extends CI_Controller
 			redirect('overzicht', 'refresh');
 		}
 	}
-	function student($studyid,$classid,$studentid)
+	function student($studyid,$studentname)
 	{
-		if(is_numeric($studyid) && is_numeric($classid) && is_numeric($studentid))
+		if(is_numeric($studyid) && $this->user->userexists($studentname))
 		{
 			if($this->session->userdata('logged_in'))
 			{
-				$data['student_name'] = $this->globalfunc->getstudentnamefromid($studentid);
-				$data['title'] = "Overzicht - " . $this->globalfunc->getstudynamefromid($studyid) . " / " .  $this->globalfunc->getclassnamefromid($classid) . " / " . $data['student_name'];
+				$data['student_full_name'] = $this->user->getfullnamefromldap($studentname);
+				$data['title'] = "Overzicht - " . $this->globalfunc->getstudynamefromid($studyid) . " / " . $data['student_full_name'];
 				$session_data = $this->session->userdata('logged_in');
 				$data['username'] = $session_data['username'];
 				$rolename = $session_data['role'];
 				$data['rolename'] = $rolename;
 				$data['studyid'] = $studyid;
-				$data['classid'] = $classid;
-				$data['studentid'] = $studentid;
+				$data['studentname'] = $studentname;
 				$this->load->view('templates/header', $data);
 				$this->load->view('templates/menu', $data);
 				$this->load->view('overzicht_subjects_view', $data);
@@ -122,22 +93,21 @@ class Overzicht extends CI_Controller
 			redirect('overzicht', 'refresh');
 		}
 	}
-	function subject($studyid,$classid,$studentid,$subjectid)
+	function subject($studyid,$studentname,$subjectid)
 	{
-		if(is_numeric($studyid) && is_numeric($classid) && is_numeric($studentid) && is_numeric($subjectid))
+		if(is_numeric($studyid) && !is_numeric($studentname) && is_numeric($subjectid))
 		{
 			if($this->session->userdata('logged_in'))
 			{
-				$data['student_name'] = $this->globalfunc->getstudentnamefromid($studentid);
+				$data['student_full_name'] = $this->user->getfullnamefromldap($studentname);
 				$data['subject_name'] = $this->globalfunc->getsubjectnamefromid($subjectid);
-				$data['title'] = "Overzicht - " . $this->globalfunc->getstudynamefromid($studyid) . " / " .  $this->globalfunc->getclassnamefromid($classid) . " / " . $data['student_name'] . " / " . $data['subject_name'];
+				$data['title'] = "Overzicht - " . $this->globalfunc->getstudynamefromid($studyid) . " / " . $data['student_full_name'] . " / " . $data['subject_name'];
 				$session_data = $this->session->userdata('logged_in');
 				$data['username'] = $session_data['username'];
 				$rolename = $session_data['role'];
 				$data['rolename'] = $rolename;
 				$data['studyid'] = $studyid;
-				$data['classid'] = $classid;
-				$data['studentid'] = $studentid;
+				$data['studentname'] = $studentname;
 				$data['subjectid'] = $subjectid;
 				$data['short_subject_name'] = $this->globalfunc->getshortsubjectnamefromid($subjectid);
 				$this->load->view('templates/header', $data);

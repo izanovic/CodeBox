@@ -23,7 +23,7 @@ Welkom, deze vakken zijn beschikbaar voor uw opleiding.
 		}
 		else
 		{
-			echo("<li>$vaknaam - Deadline is overschreden. [Inleveren niet mogelijk]</li>");
+			echo("<li>$vaknaam - Deadline is overschreden. [Inleveren en aanpassen niet mogelijk]</li>");
 		}
 		$count++;
     }

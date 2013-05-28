@@ -1,11 +1,12 @@
 <h3>Selecteer leerling:</h3>
 
 <?php 
-	$result = $this->globalfunc->students($studyid,$classid);
+	$result = $this->globalfunc->students($studyid);
 	$count = 0;
 	foreach($result as $row)
 	{
-		echo("<li><a href='../../../overzicht/student/$studyid/$classid/$row->id'>$row->username</a></li>");
+		$username_displ = $this->user->getfullnamefromldap($row->username);
+		echo("<li><a href='../../overzicht/student/$studyid/$row->username'>$username_displ</a></li>");
 		$count++;
 	}
 	if($count == 0)
