@@ -77,11 +77,29 @@ Class User extends CI_Model
 		{
 			die('Could not connect to LDAP server');
 		}
-		$dn = "ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,o=Noordelijke Hogeschool Leeuwarden,c=nl";
+		$dn = "o=Noordelijke Hogeschool Leeuwarden,c=nl"; //ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,
 		$filter = "uid=" . $username;
 		$search = ldap_search($connection, $dn, $filter) or die ("Search failed");
 		$entries = ldap_get_entries($connection, $search);
 		return $entries[0]["ou"][0];
+	}
+	function getemailfromldap($username)
+	{
+		$connection = @ldap_connect('ldapmaster.nhl.nl',380) or die(ldap_error());
+		if($connection)
+		{
+			ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+			ldap_bind($connection);
+		}
+		else
+		{
+			die('Could not connect to LDAP server');
+		}
+		$dn = "o=Noordelijke Hogeschool Leeuwarden,c=nl"; //ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,
+		$filter = "uid=" . $username;
+		$search = ldap_search($connection, $dn, $filter) or die ("Search failed");
+		$entries = ldap_get_entries($connection, $search);
+		return $entries[0]["NHLhomeMail"][0];
 	}
 	function studyexists($studyname)
 	{
@@ -142,7 +160,7 @@ Class User extends CI_Model
 		{
 			die('Could not connect to LDAP server');
 		}
-		$dn = "ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,o=Noordelijke Hogeschool Leeuwarden,c=nl";
+		$dn = "o=Noordelijke Hogeschool Leeuwarden,c=nl"; //ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,
 		$filter = "uid=" . $username;
 		$search = ldap_search($connection, $dn, $filter) or die ("Search failed");
 		$entries = ldap_get_entries($connection, $search);
