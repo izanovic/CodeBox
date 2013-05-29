@@ -97,5 +97,10 @@ Class Globalfunc extends CI_Model
 		$query = $this->db->query("SELECT username FROM users WHERE studyid = '$studyid' ORDER BY username ASC");
 		return $query->result();
 	}
+	function getstudentsinsubject($studyid,$subjectid)
+	{
+		$query = $this->db->query("SELECT username FROM users,subject WHERE users.studyid = '$studyid' AND subject.subjectid = '$subjectid'  ORDER BY username");
+		return $query->result();		
+	}
 }
 ?>

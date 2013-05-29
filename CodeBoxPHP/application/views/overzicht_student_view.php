@@ -1,6 +1,6 @@
-<h3>Overzicht van al uw vakken:</h3><br/><br/>
+<h3>Overzicht van al uw vakken:</h3>
 
-<h3><?php echo "Het is nu: " . $datenow; ?></h3><br/><br/>
+<h3><?php echo "Het is nu: " . $datenow; ?></h3>
 
 <div>
 <?php

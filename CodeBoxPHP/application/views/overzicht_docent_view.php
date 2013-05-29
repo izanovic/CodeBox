@@ -1,13 +1,15 @@
-<h3>Selecteer Studierichting:</h3><br/><br/>
+<h3>Selecteer studierichting:</h3>
 
 <div>
 <?php
 	$result = $this->globalfunc->studies();
 	foreach($result as $row)
 	{
-		echo("<li><a href='overzicht/choice/$row->id'>$row->name</a></li>");
+		$name = ucfirst(strtolower($row->name));
+		echo("<li><a href='overzicht/choice/$row->id'>$name</a></li>");
 	}
 ?>
 </div>
+
 <br/>
 <input type = "button" name = "ReturnButton" onclick = "history.go(-1);" value="Terug"/>
