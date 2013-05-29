@@ -33,6 +33,42 @@ class Administratie extends CI_Controller
 			redirect('home', 'refresh');
 		}
 	}
+	function addusers()
+	{
+		$data['title'] = "Administratie";
+		if($this->session->userdata('logged_in'))
+		{
+			$session_data = $this->session->userdata('logged_in');
+			if($session_data['role'] == 'administrator')
+			{
+				$data['username'] = $session_data['username'];
+				$rolename = $session_data['role'];
+				$data['rolename'] = $rolename;
+				$this->load->view('templates/header', $data);
+				$this->load->view('templates/menu', $data);
+				$result = $this->user->allusers();
+				foreach($result as $row)
+				{
+					if($row["uid"][0] != '')
+					{
+						$this->user->adduserifnotexists($row["uid"][0]);
+					}
+				}
+				$this->user->removeinactiveusers();
+				echo("<script>alert('Gebruikers succesvol geupdate.');</script>");
+				redirect('administratie', 'refresh');
+				$this->load->view('templates/footer', $data);
+			}
+			else
+			{
+				redirect('home', 'refresh');
+			}
+		}
+		else
+		{
+			redirect('home', 'refresh');
+		}
+	}
 }
 
 ?>

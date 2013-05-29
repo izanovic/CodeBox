@@ -37,13 +37,41 @@ class Overzicht extends CI_Controller
 			redirect('login', 'refresh');
 		}
 	}
-	function students($studyid)
+	function choice($studyid)
 	{
 		if(is_numeric($studyid))
 		{
 			$data['title'] = "Overzicht - " . $this->globalfunc->getstudynamefromid($studyid);
 			if($this->session->userdata('logged_in'))
 			{
+				$session_data = $this->session->userdata('logged_in');
+				$data['username'] = $session_data['username'];
+				$rolename = $session_data['role'];
+				$data['rolename'] = $rolename;
+				$data['studyid'] = $studyid;
+				$this->load->view('templates/header', $data);
+				$this->load->view('templates/menu', $data);
+				//$this->load->view('overzicht_students_view', $data);
+				$this->load->view('overzicht_docentch_view', $data);
+				$this->load->view('templates/footer', $data);
+			}
+			else
+			{
+				redirect('login', 'refresh');
+			}
+		}
+		else
+		{
+			redirect('overzicht', 'refresh');
+		}
+	}
+	function studentlist($studyid)
+	{
+		if(is_numeric($studyid))
+		{
+			if($this->session->userdata('logged_in'))
+			{
+				$data['title'] = "Overzicht - " . $this->globalfunc->getstudynamefromid($studyid);
 				$session_data = $this->session->userdata('logged_in');
 				$data['username'] = $session_data['username'];
 				$rolename = $session_data['role'];
@@ -81,6 +109,33 @@ class Overzicht extends CI_Controller
 				$this->load->view('templates/header', $data);
 				$this->load->view('templates/menu', $data);
 				$this->load->view('overzicht_subjects_view', $data);
+				$this->load->view('templates/footer', $data);
+			}
+			else
+			{
+				redirect('login', 'refresh');
+			}
+		}
+		else
+		{
+			redirect('overzicht', 'refresh');
+		}
+	}
+	function subjectlist($studyid)
+	{
+		if(is_numeric($studyid))
+		{
+			if($this->session->userdata('logged_in'))
+			{
+				$data['title'] = "Overzicht - " . $this->globalfunc->getstudynamefromid($studyid);
+				$session_data = $this->session->userdata('logged_in');
+				$data['username'] = $session_data['username'];
+				$rolename = $session_data['role'];
+				$data['rolename'] = $rolename;
+				$data['studyid'] = $studyid;
+				$this->load->view('templates/header', $data);
+				$this->load->view('templates/menu', $data);
+				$this->load->view('overzicht_subjectlist_view', $data);
 				$this->load->view('templates/footer', $data);
 			}
 			else

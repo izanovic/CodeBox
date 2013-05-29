@@ -3,6 +3,8 @@ Class User extends CI_Model
 {
 	function login($username, $password)
 	{
+		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		require_once("ldap.php");
 		$admincheck = explode('_',$username);
 		if($admincheck[0] == "admin")
 		{
@@ -15,7 +17,7 @@ Class User extends CI_Model
 
 		    if($query -> num_rows() == 1)
 		    {
-				return $query->result();
+				return true;
 		    }
 		    else
 		    {
@@ -24,6 +26,7 @@ Class User extends CI_Model
 		}
 		else
 		{
+			/*
 			$connection = @ldap_connect('ldapmaster.nhl.nl',380) or die(ldap_error());
 			if($connection)
 			{
@@ -39,8 +42,16 @@ Class User extends CI_Model
 			$search = ldap_search($connection,'o=Noordelijke Hogeschool Leeuwarden,c=nl',"uid=" . $username);
 			$result = ldap_get_entries($connection,$search);
 			$ldapUserString = $result[0]['dn'];
-			$ldapResult = ldap_bind($connection,$ldapUserString,$password);
+			$ldapResult = @ldap_bind($connection,$ldapUserString,$password);
 			$ldapAuthInfo = ($ldapResult? $result : false);
+			if(!ldapResult)
+			{
+				return false;
+			}
+			else
+			{
+				return $ldapAuthInfo;
+			}
 			if(count($ldapAuthInfo) < 2)
 			{
 				return false;
@@ -49,6 +60,8 @@ Class User extends CI_Model
 			{
 				return $ldapAuthInfo;
 			}
+			*/
+			return LDAP::authenticate($username,$password);
 		}
 	}
 	function userexitsindatabase($username)
@@ -67,39 +80,20 @@ Class User extends CI_Model
 	}
 	function getstudyfromldap($username)
 	{
-		$connection = @ldap_connect('ldapmaster.nhl.nl',380) or die(ldap_error());
-		if($connection)
+		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		require_once("ldap.php");
+		$studyname = LDAP::getstudy($username);
+		if($studyname == '')
 		{
-			ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
-			ldap_bind($connection);
+			return "[geen naam]";
 		}
-		else
-		{
-			die('Could not connect to LDAP server');
-		}
-		$dn = "o=Noordelijke Hogeschool Leeuwarden,c=nl"; //ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,
-		$filter = "uid=" . $username;
-		$search = ldap_search($connection, $dn, $filter) or die ("Search failed");
-		$entries = ldap_get_entries($connection, $search);
-		return $entries[0]["ou"][0];
+		return $studyname;
 	}
 	function getemailfromldap($username)
 	{
-		$connection = @ldap_connect('ldapmaster.nhl.nl',380) or die(ldap_error());
-		if($connection)
-		{
-			ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
-			ldap_bind($connection);
-		}
-		else
-		{
-			die('Could not connect to LDAP server');
-		}
-		$dn = "o=Noordelijke Hogeschool Leeuwarden,c=nl"; //ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,
-		$filter = "uid=" . $username;
-		$search = ldap_search($connection, $dn, $filter) or die ("Search failed");
-		$entries = ldap_get_entries($connection, $search);
-		return $entries[0]["NHLhomeMail"][0];
+		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		require_once("ldap.php");
+		return LDAP::getmail($username);
 	}
 	function studyexists($studyname)
 	{
@@ -143,56 +137,53 @@ Class User extends CI_Model
 			{
 				$studyid = $row->id;
 			}
-			$query = $this->db->query("INSERT INTO users (username,password,studyid) VALUES ('$username','geen wachtwoord','$studyid')");
+			$this->load->model('globalfunc','',TRUE);
+			$datenow = $this->globalfunc->todaydateindbformat();
+			$query = $this->db->query("INSERT INTO users (username,password,studyid,lastactive) VALUES ('$username','geen wachtwoord','$studyid', '$datenow')");
+		}
+	}
+	function removeinactiveusers()
+	{
+		$query = $this->db->query("SELECT Username FROM users");
+		$result = $query->result();
+		foreach($result as $row)
+		{	
+			$admntest = explode('_',$row->Username);
+			if($admntest[0] != "admin")
+			{	
+				$activedate_stamp = -1;
+				$query = $this->db->query("SELECT lastactive FROM users WHERE username = '$row->Username'");
+				$result2 = $query->result();
+				foreach($result2 as $row2)
+				{
+					$activedate_stamp = $row2->lastactive;
+				}
+				$four_years = strtotime('-4 years'); // 4 jaren inactiviteit
+				if($activedate_stamp < $four_years && $activedate_stamp != -1)
+				{
+					$query = $this->db->query("DELETE FROM users WHERE username = '$row->Username'");
+				}
+			}
 		}
 	}
 	function getfullnamefromldap($username)
 	{
+		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		require_once("ldap.php");
 		$splittest = explode('_',$username);
 		if($splittest[0] == "admin") return $splittest[1];
-		$connection = @ldap_connect('ldapmaster.nhl.nl',380) or die(ldap_error());
-		if($connection)
-		{
-			ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
-			ldap_bind($connection);
-		}
-		else
-		{
-			die('Could not connect to LDAP server');
-		}
-		$dn = "o=Noordelijke Hogeschool Leeuwarden,c=nl"; //ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,
-		$filter = "uid=" . $username;
-		$search = ldap_search($connection, $dn, $filter) or die ("Search failed");
-		$entries = ldap_get_entries($connection, $search);
-		return $entries[0]["cn"][0];
+		return LDAP::getfullusername($username);
 	}
 	function getrolefromldap($username)
 	{
-		$rolename = "gast";
-		$connection = @ldap_connect('ldapmaster.nhl.nl',380) or die(ldap_error());
-		if($connection)
-		{
-			ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
-			ldap_bind($connection);
-		}
-		else
-		{
-			die('Could not connect to LDAP server');
-		}
-		$attributes = array("dn");
-		$search = ldap_search($connection,'o=Noordelijke Hogeschool Leeuwarden,c=nl',"uid=" . $username , $attributes);
-		$result = ldap_get_entries($connection,$search);
-
-		$str = $result[0]["dn"];
-		$strrole = explode(',',$str)[4];
-		$role = explode('=',$strrole)[1];
-		$role = substr($role,0,strlen($role) - 2);
-		return $role;
+		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		require_once("ldap.php");
+		return LDAP::getldaprole($username);
 	}
 	function isalreadysend($username,$subjectid)
 	{
 		$user = $username;
-		$splittest = explode('_',$username);
+		$splittest = explode('_',$user);
 		if($splittest[0] == "admin")
 		{
 			$user = $splittest[1];
@@ -238,11 +229,23 @@ Class User extends CI_Model
 		$query->free_result();
 		return $userid;
 	}*/
+	function ldapavailable()
+	{
+		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		require_once("ldap.php");
+		return LDAP::isavailable();
+	}
 	function subjects($username)
 	{
 		$studyid = $this->getstudyid($username);
 		$subjectquery = $this->db->query("SELECT subjectID,shortname,name FROM subject WHERE studyid = '$studyid' ORDER BY name ASC");
 		return $subjectquery->result();
+	}
+	function allusers()
+	{
+		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		require_once("ldap.php");
+		return LDAP::ldapallusers();
 	}
 }
 ?>

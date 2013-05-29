@@ -80,7 +80,7 @@ class Inleveren extends CI_Controller
 		{
 			if($this->session->userdata('logged_in'))
 			{
-				if(!$this->globalfunc->expiredsubject($subject) && $this->globalfunc->subjectexists($subject))
+				if(!$this->globalfunc->expiredsubject($subjectid) && $this->globalfunc->subjectexists($subjectid))
 				{
 					$session_data = $this->session->userdata('logged_in');
 					$data['username'] = $session_data['username'];
@@ -120,8 +120,7 @@ class Inleveren extends CI_Controller
 		$data['title'] = "Inleveren";
 		if($this->session->userdata('logged_in'))
 		{
-			$isdelivered = $this->user->isalreadysend($username,$subject);
-			if(!$this->globalfunc->expiredsubject($subject) && $this->globalfunc->subjectexists($subject) && !$isdelivered && $this->user->userexists($username))
+			if(!$this->globalfunc->expiredsubject($subject) && $this->globalfunc->subjectexists($subject) && $this->user->userexists($username))
 			{
 				$version = 1;
 				$config['upload_path'] = 'files/';

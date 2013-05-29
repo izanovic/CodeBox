@@ -5,7 +5,7 @@
 	$result = $this->globalfunc->studies();
 	foreach($result as $row)
 	{
-		echo("<li><a href='overzicht/students/$row->id'>$row->name</a></li>");
+		echo("<li><a href='overzicht/choice/$row->id'>$row->name</a></li>");
 	}
 ?>
 </div>

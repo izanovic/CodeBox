@@ -16,7 +16,7 @@ class VerifyLogin extends CI_Controller
 	    $this->form_validation->set_rules('password', 'password', 'trim|required|xss_clean|callback_check_database');
 		if($this->form_validation->run() == FALSE)
 		{
-			$this->load->view('login_view');
+			$this->load->view('login_view',array('available' => $this->user->ldapavailable()));
 		}
 		else
 		{
@@ -29,34 +29,28 @@ class VerifyLogin extends CI_Controller
 		$result = $this->user->login($username, $password);
 		if($result)
 		{
-			if(count($result) == 1) //admin auth
+			$admtest = explode('_',$username);
+			if($admtest[0] == 'admin')
 			{
-				foreach($result as $row)
-				{
-					$sess_array = array
-					(
-						'username' => $username,
-						'role' => 'administrator'
-					);
-					$this->session->set_userdata('logged_in', $sess_array);
-					return true;
-				}
+				$sess_array = array
+				(
+					'username' => strtolower($username),
+					'role' => 'administrator'
+				);
+				$this->session->set_userdata('logged_in', $sess_array);
+				return true;
 			}
-			else if(count($result) == 2) //ldap auth
+			else
 			{
 				$sess_array = array();
 				$sess_array = array(
 					//'id' => $row->id,
-					'username' => $username,
+					'username' => strtolower($username),
 					'role' => $this->user->getrolefromldap($username)
 					);
 				$this->session->set_userdata('logged_in', $sess_array);
 				$this->user->adduserifnotexists($username);
 				return true;
-			}
-			else
-			{
-				return false;
 			}
 		}	
 		else

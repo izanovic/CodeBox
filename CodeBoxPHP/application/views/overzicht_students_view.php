@@ -5,8 +5,8 @@
 	$count = 0;
 	foreach($result as $row)
 	{
-		$username_displ = $this->user->getfullnamefromldap($row->username);
-		echo("<li><a href='../../overzicht/student/$studyid/$row->username'>$username_displ</a></li>");
+		//$username_displ = $this->user->getfullnamefromldap($row->username);
+		echo("<li><a href='../../overzicht/student/$studyid/$row->username'>$row->username</a></li>");
 		$count++;
 	}
 	if($count == 0)

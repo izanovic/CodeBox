@@ -19,6 +19,7 @@
 					<button id = "button" type="submit">Inloggen >></button><a href="home/vergeten">wachtwoord vergeten?</a>
 					</br>
 					<div><b><?php echo validation_errors(); ?></b></div>
+					<div><b><?php if(!$available) { echo("LDAP server niet bereikbaar, u kunt niet inloggen met uw NHL account."); } ?></b></div>
 					<h3>Storing of vraag? Bel support 058-251 2552</h3>
 				</div>
 			</div>

@@ -10,8 +10,9 @@ class Login extends CI_Controller
 	{
 		if(!$this->session->userdata('logged_in'))
 		{
+			$this->load->model('user','',TRUE);
 			$this->load->helper(array('form'));
-			$this->load->view('login_view');
+			$this->load->view('login_view',array('available' => $this->user->ldapavailable()));
 		}
 		else
 		{

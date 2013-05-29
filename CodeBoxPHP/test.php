@@ -1,3 +1,12 @@
+<!doctype html>
+<html lang="nl">
+<head>
+	<meta charset=utf-8>
+	<title>LDAP Unit test: Authenticate</title>
+</head>
+<body>
+
+
 <?php
 /*
 		//$this->config->load('ldap',true);
@@ -63,7 +72,7 @@
 
 			echo $info["count"]." entries returned\n";
 		}
-*/
+
 		$connection = @ldap_connect('ldapmaster.nhl.nl',380) or die(ldap_error());
 		if($connection)
 		{
@@ -78,10 +87,38 @@
 		$user = "leps1200";
 		$pass = "";
 
-		$search = ldap_search($connection,'o=Noordelijke Hogeschool Leeuwarden,c=nl',"uid=" . $user);
+		$search = ldap_search($connection,'ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,o=Noordelijke Hogeschool Leeuwarden,c=nl',"uid=" . $user);
 		$result = ldap_get_entries($connection,$search);
 		$ldapUserString = $result[0]['dn'];
 		$ldapResult = ldap_bind($connection,$ldapUserString,$pass);
 		$ldapAuthInfo = ($ldapResult? $result : false);
 		return $ldapAuthInfo;
+*/
+		//$username = "oosterha";
+		$connection = @ldap_connect("ldapmaster.nhl.nl",380) or die(ldap_error());
+		if($connection)
+		{
+			ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+			ldap_bind($connection);
+		}
+		else
+		{
+			die("error");
+		}
+
+		$dn = "ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,o=Noordelijke Hogeschool Leeuwarden,c=nl"; //ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,
+		$filter = "uid=*";
+		$search = ldap_search($connection, $dn, $filter);
+		$entries = ldap_get_entries($connection, $search);
+		//echo("gast");
 ?>
+
+<pre><?php 
+	foreach($entries as $row)
+	{
+		var_dump($row["uid"][0]);
+	}
+
+?></pre>
+</body>
+</html>
