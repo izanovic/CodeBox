@@ -84,7 +84,7 @@ Class Globalfunc extends CI_Model
 	}
 	function studysubjects($studyid)
 	{
-		$query = $this->db->query("SELECT subjectid,name FROM subject WHERE studyid = '$studyid'");
+		$query = $this->db->query("SELECT subjectid,name FROM subject WHERE studyid = '$studyid' ORDER BY name");
 		return $query->result();
 	}
 	function classes($studyid)

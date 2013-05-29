@@ -148,6 +148,36 @@ class Overzicht extends CI_Controller
 			redirect('overzicht', 'refresh');
 		}
 	}
+	function userlistbysubject($studyid,$subjectid)
+	{	
+		if($this->session->userdata('logged_in'))
+		{
+			if(is_numeric($studyid) && is_numeric($subjectid))
+			{
+				$data['subject_name'] = $this->globalfunc->getsubjectnamefromid($subjectid);
+				$data['title'] = "Overzicht - " . $this->globalfunc->getstudynamefromid($studyid) . " / " .  $data['subject_name'];
+				$session_data = $this->session->userdata('logged_in');
+				$data['username'] = $session_data['username'];
+				$rolename = $session_data['role'];
+				$data['rolename'] = $rolename;
+				$data['studyid'] = $studyid;
+				$data['subjectid'] = $subjectid;
+				$data['short_subject_name'] = $this->globalfunc->getshortsubjectnamefromid($subjectid);
+				$this->load->view('templates/header', $data);
+				$this->load->view('templates/menu', $data);
+				$this->load->view('overzicht_userspersubject_view', $data);
+				$this->load->view('templates/footer', $data);
+			}
+			else
+			{
+				redirect('overzicht', 'refresh');
+			}
+		}
+		else
+		{
+			redirect('login', 'refresh');
+		}
+	}
 	function subject($studyid,$studentname,$subjectid)
 	{
 		if(is_numeric($studyid) && !is_numeric($studentname) && is_numeric($subjectid))
