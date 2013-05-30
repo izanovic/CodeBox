@@ -7,6 +7,7 @@ class Overzicht extends CI_Controller
 		parent::__construct();
 		$this->load->model('globalfunc','',TRUE);
 		$this->load->model('user','',TRUE);
+		$this->load->helper(array('form'));
 	}
 	function index()
 	{
@@ -31,6 +32,33 @@ class Overzicht extends CI_Controller
 				$this->load->view('overzicht_student_view', $data);
 			}
 			$this->load->view('templates/footer', $data);
+		}
+		else
+		{
+			redirect('login', 'refresh');
+		}
+	}
+	function mailusers($subjectid)
+	{
+		$data['title'] = "Email";
+		if($this->session->userdata('logged_in'))
+		{
+			$session_data = $this->session->userdata('logged_in');
+			if($session_data['role'] != "student" || $session_data['role'] != "gast")
+			{
+				$data['username'] = $session_data['username'];
+				$rolename = $session_data['role'];
+				$data['subjectid'] = $subjectid;
+				$data['rolename'] = $rolename;
+				$this->load->view('templates/header', $data);
+				$this->load->view('templates/menu', $data);
+				$this->load->view('email_view', $data);
+				$this->load->view('templates/footer', $data);
+			}
+			else
+			{
+				redirect('home', 'refresh');
+			}
 		}
 		else
 		{

@@ -1,9 +1,10 @@
 <?php
+define('_includepath_',';c:/xampp/htdocs/includes');
 Class User extends CI_Model
 {
 	function login($username, $password)
 	{
-		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
 		$admincheck = explode('_',$username);
 		if($admincheck[0] == "admin")
@@ -80,7 +81,7 @@ Class User extends CI_Model
 	}
 	function getstudyfromldap($username)
 	{
-		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
 		$studyname = LDAP::getstudy($username);
 		if($studyname == '')
@@ -91,7 +92,7 @@ Class User extends CI_Model
 	}
 	function getemailfromldap($username)
 	{
-		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
 		return LDAP::getmail($username);
 	}
@@ -168,7 +169,7 @@ Class User extends CI_Model
 	}
 	function getfullnamefromldap($username)
 	{
-		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
 		$splittest = explode('_',$username);
 		if($splittest[0] == "admin") return $splittest[1];
@@ -176,7 +177,7 @@ Class User extends CI_Model
 	}
 	function getrolefromldap($username)
 	{
-		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
 		return LDAP::getldaprole($username);
 	}
@@ -231,7 +232,7 @@ Class User extends CI_Model
 	}*/
 	function ldapavailable()
 	{
-		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
 		return LDAP::isavailable();
 	}
@@ -243,7 +244,7 @@ Class User extends CI_Model
 	}
 	function allusers()
 	{
-		ini_set("include_path", ";c:/xampp/htdocs/includes");
+		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
 		return LDAP::ldapallusers();
 	}

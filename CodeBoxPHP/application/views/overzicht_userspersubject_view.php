@@ -61,10 +61,14 @@
 	}
 	if($count == 0)
 	{
-		echo("Niemand hoeft meer iets in te leveren.");
+		echo("Niemand hoeft meer iets in te leveren.<br/>");
 	}
+	$base = base_url() . "index.php";
+	echo("<div><a href='$base/overzicht/mailusers/$subjectid'>Stuur herinnering</a></div>");
 
 ?></div>
+
+
 
 <br/>
 <input type = "button" name = "ReturnButton" onclick = "history.go(-1);" value="Terug"/>
