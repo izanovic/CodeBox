@@ -18,6 +18,8 @@ Class User extends CI_Model
 
 		    if($query -> num_rows() == 1)
 		    {
+		    	$date = time();
+		    	$this->db->query("UPDATE users SET lastactive = '$date' WHERE username = '$username'");
 				return true;
 		    }
 		    else
