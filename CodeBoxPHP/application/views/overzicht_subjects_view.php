@@ -22,7 +22,8 @@
 		}
 		else
 		{
-			echo "<li><a href='../../../overzicht/subject/$studyid/$studentname/$row->subjectID'>$vaknaam - Download bestand.</a>  [Deadline: $datedisplay - $expiredtext]</li>";
+			$base = base_url() . "index.php";
+			echo "<li><a href='$base/overzicht/subject/$studyid/$studentname/$row->subjectID'>$vaknaam - Download bestand.</a>  [Deadline: $datedisplay - $expiredtext]</li>";
 		}
 		$count++;
     }

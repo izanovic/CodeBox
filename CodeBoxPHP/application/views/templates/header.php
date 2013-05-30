@@ -1,8 +1,8 @@
 <html>
 	<head>
 		<title><?php echo $title ?> - CodeBox</title>
-		<link href="/css/tabcontent.css" rel="stylesheet" type="text/css" />
-		<script src="/css/tabcontent.js" type="text/javascript"></script>
+		<link href="<?=base_url()?>/css/tabcontent.css" rel="stylesheet" type="text/css" />
+		<script src="<?=base_url()?>/css/tabcontent.js" type="text/javascript"></script>
 		<style type="text/css">
 
 	::selection{ background-color: #E13300; color: white; }

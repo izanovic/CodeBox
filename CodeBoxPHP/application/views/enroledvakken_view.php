@@ -14,11 +14,11 @@ Welkom, deze vakken zijn beschikbaar voor uw opleiding.
 		{
 			if($alreadysend)
 			{
-				echo "<li>$vaknaam - Voldaan. [<a href='inleveren/edit/$row->subjectID/'>aanpassen</a>]</li>";
+				echo "<li>$vaknaam - Voldaan. [<a href='<?=base_url()?>/inleveren/edit/$row->subjectID/'>aanpassen</a>]</li>";
 			}
 			else
 			{
-				echo "<li>$vaknaam - Niet voldaan! <a href='inleveren/vak/$row->subjectID'>[Inleveren]</a></li>";
+				echo "<li>$vaknaam - Niet voldaan! <a href='<?=base_url()?>/inleveren/vak/$row->subjectID'>[Inleveren]</a></li>";
 			}
 		}
 		else

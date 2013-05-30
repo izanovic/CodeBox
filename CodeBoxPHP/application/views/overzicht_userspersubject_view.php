@@ -30,9 +30,10 @@
 	foreach($result as $row)
 	{
 		$alreadysend = $this->user->isalreadysend($row->username,$subjectid);
+		$base = base_url();
 		if($alreadysend)
 		{
-			echo("<li><a href='../../../overzicht/subject/$studyid/$row->username/$subjectid'>$row->username - Download bestand.</a>");
+			echo("<li><a href='$base/overzicht/subject/$studyid/$row->username/$subjectid'>$row->username - Download bestand.</a>");
 			$count++;
 		}
 	}

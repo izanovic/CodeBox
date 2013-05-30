@@ -2,7 +2,7 @@
 	"http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<link href= "../../css/StyleInlog.css" rel="Stylesheet" type="text/css"/>
+		<link href= "<?=base_url()?>/css/StyleInlog.css" rel="Stylesheet" type="text/css"/>
 		<title>Login - CodeBox</title>
 	</head>
 	<body>
@@ -11,7 +11,7 @@
 				<div id = "padding">
 					</br></br>
 					<h1>Log in met je NHL account</h1>
-					<h2>Gebruikersnaam</h2><img id = "logo" src="../../images/nhl_logo.png" alt="Logo">
+					<h2>Gebruikersnaam</h2><img id = "logo" src="<?=base_url()?>/images/nhl_logo.png" alt="Logo">
 					<input id = "username" type="text" size="12" maxlength="15" name="username" Class = "boxes"><br />
 					<h2>Wachtwoord</h2>
 					<input id = "password" type="password" size="12" maxlength="30" name="password" Class = "boxes"><br />

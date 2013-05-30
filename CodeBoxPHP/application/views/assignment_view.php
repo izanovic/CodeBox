@@ -11,7 +11,7 @@
 			{
 				$opdrachtid = $row2->title;
 			}
-			echo "<li><a href='../assignment/$subjectid/$row->id'>$opdrachtid</a></li>";
+			echo "<li><a href='<?=base_url()?>/inleveren/assignment/$subjectid/$row->id'>$opdrachtid</a></li>";
 			$count++;
 		}
 		if($count == 0)

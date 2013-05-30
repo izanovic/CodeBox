@@ -4,7 +4,7 @@
 	$result = $this->globalfunc->classes($studyid);
 	foreach($result as $row)
 	{
-		echo("<li><a href='../../overzicht/students/$studyid/$row->id'>$row->name</a></li>");
+		echo("<li><a href='<?=base_url()?>/overzicht/students/$studyid/$row->id'>$row->name</a></li>");
 	}
 ?>
 

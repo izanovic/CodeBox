@@ -6,7 +6,8 @@
 	if(count($result) == 0) { echo ("Er zijn geen vakken om weer te geven!"); }
 	foreach($result as $row)
 	{
-		echo("<li><a href='../userlistbysubject/$studyid/$row->subjectid'>$row->name</a></li>");
+		$base = base_url() . "index.php";
+		echo("<li><a href='$base/overzicht/userlistbysubject/$studyid/$row->subjectid'>$row->name</a></li>");
 	}
 ?>
 </div>
