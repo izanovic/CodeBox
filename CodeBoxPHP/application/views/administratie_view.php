@@ -2,4 +2,4 @@
 De administratiepagina van de site die alleen beschikbaar is voor administrators.
 <br/>
 <br/>
-<a href="<?=base_url()?>/administratie/addusers">Informatica gebruikers updaten!</a>
+<a href="<?=base_url()?>index.php/administratie/addusers">Informatica gebruikers updaten!</a>
