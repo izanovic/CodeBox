@@ -94,13 +94,31 @@ Class Globalfunc extends CI_Model
 	}
 	function students($studyid)
 	{
-		$query = $this->db->query("SELECT username FROM users WHERE studyid = '$studyid' ORDER BY username ASC");
+		$query = $this->db->query("SELECT username,fullname FROM users WHERE studyid = '$studyid' ORDER BY username ASC");
 		return $query->result();
 	}
 	function getstudentsinsubject($studyid,$subjectid)
 	{
-		$query = $this->db->query("SELECT username FROM users,subject WHERE users.studyid = '$studyid' AND subject.subjectid = '$subjectid'  ORDER BY username");
+		$query = $this->db->query("SELECT username,fullname FROM users,subject WHERE users.studyid = '$studyid' AND subject.subjectid = '$subjectid'  ORDER BY username");
 		return $query->result();		
+	}
+	function cleanupdbentries()
+	{
+		$query = $this->db->query("SELECT * FROM files");
+		foreach($query->result() as $row)
+		{
+			$filename = $row->name;
+			$count = 0;
+			$result = glob ("files/$filename*.*");
+			foreach($result as $row2)
+			{
+				$count++;
+			}
+			if($count == 0)
+			{
+				$query = $this->db->query("DELETE FROM files WHERE name = '$row->name'");
+			}
+		}
 	}
 }
 ?>

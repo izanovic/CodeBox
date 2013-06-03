@@ -6,8 +6,9 @@
 	foreach($result as $row)
 	{
 		//$username_displ = $this->user->getfullnamefromldap($row->username);
+		$fulluser = ucfirst($row->fullname);
 		$base = base_url();
-		echo("<li><a href='$base" . "index.php/overzicht/student/$studyid/$row->username'>$row->username</a></li>");
+		echo("<li><a href='$base" . "index.php/overzicht/student/$studyid/$row->username'>$fulluser</a></li>");
 		$count++;
 	}
 	if($count == 0)

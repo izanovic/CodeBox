@@ -48,6 +48,7 @@ class Inleveren extends CI_Controller
 					if(!$isdelivered)
 					{
 						$this->load->view('templates/header', $data);
+						$this->load->view('templates/menu', $data);
 						$data['subjectid'] = $subjectid;
 						$data['error'] = ' ';
 						$this->load->view('inleveren_view', $data);
@@ -93,6 +94,7 @@ class Inleveren extends CI_Controller
 					if($isdelivered)
 					{
 						$this->load->view('templates/header', $data);
+						$this->load->view('templates/menu', $data);
 						$data['subjectid'] = $subjectid;
 						$data['error'] = ' ';
 						$this->load->view('inleveren_view', $data);
@@ -166,6 +168,7 @@ class Inleveren extends CI_Controller
 					$rolename = $session_data['role'];
 					$data['rolename'] = $rolename;
 					$this->load->view('templates/header', $data);
+					$this->load->view('templates/menu', $data);
 					$this->load->view('inleveren_fin_view', $data);
 					$this->load->view('templates/footer', $data);
 					$user = $data['username'];
@@ -181,11 +184,11 @@ class Inleveren extends CI_Controller
 					}
 					if($querycount > 0)
 					{
-						$query = $this->db->query("UPDATE files SET location='$file',owner='$user',subjectid='$subject',version='$version' WHERE id = '$fileid'");
+						$query = $this->db->query("UPDATE files SET location='$file',owner='$user',subjectid='$subject',version='$version',name='$fileformat' WHERE id = '$fileid'");
 					}
 					else
 					{
-						$query = $this->db->query("INSERT INTO files (location, owner, subjectid, viewed, version) VALUES ('$file','$user','$subject',0, '$version')");
+						$query = $this->db->query("INSERT INTO files (location, owner, subjectid, viewed, version, name) VALUES ('$file','$user','$subject',0, '$version', '$fileformat')");
 					}
 					if(!$query)
 					{

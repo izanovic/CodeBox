@@ -6,6 +6,7 @@ class Administratie extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('user','',TRUE);
+		$this->load->model('globalfunc','',TRUE);
 	}
 	function index()
 	{
@@ -41,6 +42,7 @@ class Administratie extends CI_Controller
 			$session_data = $this->session->userdata('logged_in');
 			if($session_data['role'] == 'administrator')
 			{
+				//echo("<script>alert('Een ogenblik geduld, dit proces kan meer dan 10 minuten in beslag nemen. Onderbreek dit proces niet!');</script>");
 				$data['username'] = $session_data['username'];
 				$rolename = $session_data['role'];
 				$data['rolename'] = $rolename;
@@ -56,6 +58,61 @@ class Administratie extends CI_Controller
 				}
 				$this->user->removeinactiveusers();
 				echo("<script>alert('Gebruikers succesvol geupdate.');</script>");
+				redirect('administratie', 'refresh');
+				$this->load->view('templates/footer', $data);
+			}
+			else
+			{
+				redirect('home', 'refresh');
+			}
+		}
+		else
+		{
+			redirect('home', 'refresh');
+		}
+	}
+	function cleanupdatabase()
+	{
+		$data['title'] = "Administratie";
+		if($this->session->userdata('logged_in'))
+		{
+			$session_data = $this->session->userdata('logged_in');
+			if($session_data['role'] == 'administrator')
+			{
+				$data['username'] = $session_data['username'];
+				$rolename = $session_data['role'];
+				$data['rolename'] = $rolename;
+				$this->load->view('templates/header', $data);
+				$this->load->view('templates/menu', $data);
+				$this->globalfunc->cleanupdbentries();
+				echo("<script>alert('Succesvol opgeschoond!');</script>");
+				redirect('administratie', 'refresh');
+				$this->load->view('templates/footer', $data);
+			}
+			else
+			{
+				redirect('home', 'refresh');
+			}
+		}
+		else
+		{
+			redirect('home', 'refresh');
+		}	
+	}
+	function addsubjects()
+	{
+		$data['title'] = "Administratie";
+		if($this->session->userdata('logged_in'))
+		{
+			$session_data = $this->session->userdata('logged_in');
+			if($session_data['role'] == 'administrator')
+			{
+				$data['username'] = $session_data['username'];
+				$rolename = $session_data['role'];
+				$data['rolename'] = $rolename;
+				$this->load->view('templates/header', $data);
+				$this->load->view('templates/menu', $data);
+				echo("<script>alert('Deze functie moet nog geimplementeerd worden!');</script>");
 				redirect('administratie', 'refresh');
 				$this->load->view('templates/footer', $data);
 			}

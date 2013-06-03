@@ -1,5 +1,6 @@
 <?php
 define('_includepath_',';c:/xampp/htdocs/includes');
+ini_set('MAX_EXECUTION_TIME', 3600);
 Class User extends CI_Model
 {
 	function login($username, $password)
@@ -128,9 +129,10 @@ Class User extends CI_Model
 	{
 		if(!$this->userexists($username))
 		{
-			$studyname = $this->getstudyfromldap($username);
+			$studyname = ucfirst(strtolower($this->getstudyfromldap($username)));
+			$fullname = $this->getfullnamefromldap($username);
 			$studyid = -1;
-			if(!$this->studyexists($studyname))
+			if(!$this->studyexists($studyname) && $this->getrolefromldap($username))
 			{
 				$this->db->query("INSERT INTO study (name) VALUES ('$studyname')");
 			}
@@ -142,7 +144,7 @@ Class User extends CI_Model
 			}
 			$this->load->model('globalfunc','',TRUE);
 			$datenow = $this->globalfunc->todaydateindbformat();
-			$query = $this->db->query("INSERT INTO users (username,password,studyid,lastactive) VALUES ('$username','geen wachtwoord','$studyid', '$datenow')");
+			$query = $this->db->query("INSERT INTO users (username,fullname,password,studyid,lastactive) VALUES ('$username','$fullname','geen wachtwoord','$studyid', '$datenow')");
 		}
 	}
 	function removeinactiveusers()
@@ -167,6 +169,17 @@ Class User extends CI_Model
 					$query = $this->db->query("DELETE FROM users WHERE username = '$row->Username'");
 				}
 			}
+		}
+	}
+	function getfullnamefromdb($username)
+	{
+		$query = $this->db->query("SELECT Fullname FROM users WHERE username = '$username' LIMIT 1");
+		$result = $query->result();
+		foreach($result as $row)
+		{	
+			$result = $row->Fullname;
+			$result = explode(' - ', $result);
+			return ucfirst($result[1]);
 		}
 	}
 	function getfullnamefromldap($username)

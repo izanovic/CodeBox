@@ -22,7 +22,8 @@ class Upload extends CI_Controller {
 		$config['max_height']  = '768';
 
 		$this->load->library('upload', $config);
-
+		$this->load->view('templates/header', $data);
+		$this->load->view('templates/menu', $data);
 		if ( ! $this->upload->do_upload())
 		{
 			$error = array('error' => $this->upload->display_errors());
@@ -35,6 +36,7 @@ class Upload extends CI_Controller {
 
 			$this->load->view('upload_success', $data);
 		}
+		$this->load->view('templates/footer', $data);
 	}
 }
 ?>

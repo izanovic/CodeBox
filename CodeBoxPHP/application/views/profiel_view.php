@@ -1,2 +1,5 @@
-<h3>Pagina inhoud</h3>
-Hier kan de gebruiker zijn gegevens bekijken, ook kan de gebruiker een afbeelding van zichzelf instellen als avatar.
+<h3>Algemene informatie</h3>
+
+<?php
+	echo("Hier moeten de gebruikersgegevens staan. Ook een leuke avatar.");
+?>

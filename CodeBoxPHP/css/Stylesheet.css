@@ -1,0 +1,47 @@
+@import url('reset.css');
+
+body
+{
+    background:#e6eecc url(../images/print.png) repeat top left;
+	color: #333;
+	font-family: 'Terminal Dosis', Arial, sans-serif;
+	font-size: 16px;
+}
+
+.container{
+	position:relative;
+	width:300px;
+
+}
+
+a
+{
+	color: #388E8E;
+	text-decoration: none;
+}
+
+.clr
+{
+	clear: both;
+}
+
+.content
+{
+	position:relative;
+}
+
+h1
+{
+	font-size:300%;
+	font-weight:bolder;
+}
+h2
+{
+	font-size:200%;
+	font-weight:bolder;
+}
+h3
+{
+	font-size:150%;
+	font-weight:bolder;
+}

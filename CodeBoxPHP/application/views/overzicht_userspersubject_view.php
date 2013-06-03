@@ -55,7 +55,7 @@
 		$alreadysend = $this->user->isalreadysend($row->username,$subjectid);
 		if(!$alreadysend)
 		{
-			echo("<li>$row->username</li>");
+			echo("<li>$row->fullname</li>");
 			$count++;
 		}
 	}
