@@ -1,0 +1,58 @@
+body
+{
+	background: #e9f0f5 url(../images/print.png) repeat top left;
+	font-family: 'Eras Light ITC';
+}
+
+a{
+	color: #FFF;
+	text-decoration: none;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+}
+
+img{
+
+	padding:10px;
+}
+
+.hs-menu{
+	position: fixed;
+	background: #131313;
+	width: 200px;
+	left: 0px;
+	top: 0px;
+	height: 100%;
+	box-shadow: rgba(0,0,0,0.4) 10px 10px 0 10px;
+}
+.hs-menu nav{
+	position: absolute;
+	top: 250px;
+	left: 0px;
+	right: 0px;
+	bottom: 50px;
+	font-family: 'Eras Light ITC';
+}
+.hs-menu nav a{
+	display: block;
+	padding: 10px 20px;
+	text-align: center;
+	outline: none;
+	border-top: 1px solid rgba(126, 126, 126, 0.2);
+}
+
+.hs-menu nav a:last-child{
+
+	border-bottom: 1px solid rgba(126, 126, 126, 0.2);
+}
+
+
+
+.hs-menu nav a:hover{
+	box-shadow: rgba(0,0,0,0.4) 20px 0 0px 0px;
+}
+
+.content
+{
+	margin: 0 0 0 240px;
+}

@@ -1,3 +1,4 @@
-</br></br></br><strong>&copy; 2013 - All rights reserved.</strong>	
+</div>
+</br></br></br><strong class= "content">&copy; 2013 - All rights reserved.</strong>	
 </body>
 </html>

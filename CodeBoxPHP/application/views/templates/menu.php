@@ -1,15 +1,19 @@
 		<h2><?php echo $title;?></h2>
-		<img id = "logo" src="<?=base_url()?>/images/nhl_logo.png" alt="Logo">
-		<ul class="tabs">
-			<li><a href="<?=base_url() . 'index.php'?>/home">Hoofdpagina</a></li>
-			<li><a href="<?=base_url() . 'index.php'?>/inleveren">Inleveren</a></li>
-			<li><a href="<?=base_url() . 'index.php'?>/overzicht">Overzicht</a></li>
-			<li><a href="<?=base_url() . 'index.php'?>/profiel">Mijn Profiel</a></li>
-		<?php if($rolename == 'docent' || $rolename == 'administrator')
-		{		
-			$base = base_url() . 'index.php';
-			echo("<li><a href='$base/administratie'>Beheer</a></li>");
-		} ?>
+		<div class="hs-menu">
+			<img src = "<?=base_url()?>/images/codeboxwhite.png" heigth = "100px" width = "180px">
+			<img src = "<?=base_url()?>/images/nhl_logowhite.png" heigth = "100px" width = "180px">
+			<nav>
+				<a href="<?=base_url() . 'index.php'?>/home"><span>Home</span></a>
+				<a href="<?=base_url() . 'index.php'?>/inleveren"><span>Inleveren</span></a>
+				<a href="<?=base_url() . 'index.php'?>/overzicht"><span>Overzicht</span></a>
+				<a href="<?=base_url() . 'index.php'?>/profiel"><span>Mijn Profiel</span></a>
+				<?php if($rolename == 'docent' || $rolename == 'administrator')
+				{		
+					$base = base_url() . 'index.php';
+					echo("<a href='$base/administratie'><span>Administratie</span></a>");
+				} ?>
+				<a href="<?=base_url() . 'index.php'?>/logout"><span>Uitloggen</span></a>
+			</nav>
 
-			<li><a href="logout">Uitloggen</a></li>
-		</ul>
+		</div>
+		<div  class = "content">
