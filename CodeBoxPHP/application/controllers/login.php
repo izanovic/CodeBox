@@ -6,6 +6,8 @@ class Login extends CI_Controller
 	{
 		parent::__construct();
 	}
+	//Loads the view containing the required fields to log in.
+	//This function also checks if LDAP is available or not for the user.
 	function index()
 	{
 		if(!$this->session->userdata('logged_in'))

@@ -1,6 +1,7 @@
 <?php
 Class Role extends CI_Model
 {
+	//Returns the role from the database.
 	function rolename($roleid)
 	{
 		$this -> db -> select('rolename');

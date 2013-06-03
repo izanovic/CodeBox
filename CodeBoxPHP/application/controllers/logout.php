@@ -6,6 +6,7 @@ class Logout extends CI_Controller
 	{
 		parent::__construct();
 	}
+	//Leads directly to the loginscreen and destroying all session-vars.
 	function index()
 	{
 		$data['title'] = "Uitloggen";

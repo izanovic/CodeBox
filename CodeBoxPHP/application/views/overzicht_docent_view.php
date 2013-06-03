@@ -5,7 +5,7 @@
 	$result = $this->globalfunc->studies();
 	foreach($result as $row)
 	{
-		$name = ucfirst(strtolower($row->name));
+		$name = $row->name;
 		$base = base_url();
 		echo("<li><a href='$base" . "index.php/overzicht/choice/$row->id'>$name</a></li>");
 	}

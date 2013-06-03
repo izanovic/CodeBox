@@ -3,6 +3,7 @@ define('_includepath_',';c:/xampp/htdocs/includes');
 ini_set('MAX_EXECUTION_TIME', 3600);
 Class User extends CI_Model
 {
+	//Checks if the credentials are correct, using LDAP or local database, according to the username.
 	function login($username, $password)
 	{
 		ini_set("include_path", _includepath_);
@@ -68,6 +69,7 @@ Class User extends CI_Model
 			return LDAP::authenticate($username,$password);
 		}
 	}
+	//Checks if the user exists in the local database.
 	function userexitsindatabase($username)
 	{
 		$query = $this->db->query("SELECT * FROM users WHERE username = '$username'");
@@ -80,8 +82,8 @@ Class User extends CI_Model
 		{
 			return false;
 		}
-
 	}
+	//Returns from a remote class from LDAP the studyname of the specified user.
 	function getstudyfromldap($username)
 	{
 		ini_set("include_path", _includepath_);
@@ -93,12 +95,14 @@ Class User extends CI_Model
 		}
 		return $studyname;
 	}
+	//Returns the email from a LDAP user.
 	function getemailfromldap($username)
 	{
 		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
 		return LDAP::getmail($username);
 	}
+	//Checks if a study exists in the database.
 	function studyexists($studyname)
 	{
 		$query = $this->db->query("SELECT id FROM study WHERE name = '$studyname' LIMIT 1");
@@ -112,19 +116,12 @@ Class User extends CI_Model
 			return false;
 		}
 	}
+	//Checks if an user exists in the db. Seems a duplicate, whoops!
 	function userexists($username)
 	{
-		$query = $this->db->query("SELECT * FROM users WHERE username = '$username' LIMIT 1");
-		$result = $query->result();
-		if(count($result) > 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return $this->userexitsindatabase($username);
 	}
+	//Adds user if it does not exists in our database.
 	function adduserifnotexists($username)
 	{
 		if(!$this->userexists($username))
@@ -147,6 +144,7 @@ Class User extends CI_Model
 			$query = $this->db->query("INSERT INTO users (username,fullname,password,studyid,lastactive) VALUES ('$username','$fullname','geen wachtwoord','$studyid', '$datenow')");
 		}
 	}
+	//Removes inactive users from the database.
 	function removeinactiveusers()
 	{
 		$query = $this->db->query("SELECT Username FROM users");
@@ -171,6 +169,7 @@ Class User extends CI_Model
 			}
 		}
 	}
+	//Returns full name from database.
 	function getfullnamefromdb($username)
 	{
 		$query = $this->db->query("SELECT Fullname FROM users WHERE username = '$username' LIMIT 1");
@@ -182,6 +181,7 @@ Class User extends CI_Model
 			return ucfirst($result[1]);
 		}
 	}
+	//Returns the user's fullname from LDAP.
 	function getfullnamefromldap($username)
 	{
 		ini_set("include_path", _includepath_);
@@ -190,12 +190,14 @@ Class User extends CI_Model
 		if($splittest[0] == "admin") return $splittest[1];
 		return LDAP::getfullusername($username);
 	}
+	//Returns the role for the user from LDAP.
 	function getrolefromldap($username)
 	{
 		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
 		return LDAP::getldaprole($username);
 	}
+	//Checks if a file is send or not.
 	function isalreadysend($username,$subjectid)
 	{
 		$user = $username;
@@ -218,6 +220,7 @@ Class User extends CI_Model
 			return false;
 		}
 	}
+	//Returns the studyid from the database providing the user's name.
 	function getstudyid($username)
 	{
 		$studyid = -1;
@@ -245,18 +248,21 @@ Class User extends CI_Model
 		$query->free_result();
 		return $userid;
 	}*/
+	//Checks if LDAP is available or not.
 	function ldapavailable()
 	{
 		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
 		return LDAP::isavailable();
 	}
+	//Returns all subjects for an user.
 	function subjects($username)
 	{
 		$studyid = $this->getstudyid($username);
 		$subjectquery = $this->db->query("SELECT subjectID,shortname,name FROM subject WHERE studyid = '$studyid' ORDER BY name ASC");
 		return $subjectquery->result();
 	}
+	//Returns all users from LDAP.
 	function allusers()
 	{
 		ini_set("include_path", _includepath_);

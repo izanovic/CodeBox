@@ -2,6 +2,7 @@
 session_start(); //we need to call PHP's session object to access it through CI
 class Inleveren extends CI_Controller 
 {
+	//constructs the function
 	function __construct()
 	{
 		parent::__construct();
@@ -9,6 +10,8 @@ class Inleveren extends CI_Controller
 		$this->load->model('user','',TRUE);
 		$this->load->model('globalfunc','',TRUE);
 	}
+	//called when the controller inleveren is being called from index [without any parameters]
+	//This gives a list of subjects for the study the person is in.
 	function index()
 	{
 		$data['title'] = "Inleveren";
@@ -29,6 +32,8 @@ class Inleveren extends CI_Controller
 			redirect('login', 'refresh');
 		}
 	}
+	//Called when the user clicks 'inleveren', this will redirect to the upload screen giving the required parameters to the 
+	//uploadfunction to be parsed.
 	function vak($subjectid)
 	{
 		if(is_numeric($subjectid))
@@ -75,6 +80,8 @@ class Inleveren extends CI_Controller
 			redirect($subjectid, 'refresh');
 		}
 	}
+	//Called when the user presses the 'aanpassen' button, which handles the editability of the specific file.
+	//It also uploads the new file to its required position.
 	function edit($subjectid)
 	{
 		if(is_numeric($subjectid))
@@ -117,6 +124,8 @@ class Inleveren extends CI_Controller
 			redirect($subjectid, 'refresh');
 		}
 	}
+	//Handles the upload of the specific file. It also parses the subjectname and username into the file's name.
+	//This function also creates a database entry containing specific information of the file.
 	function do_upload($subject,$username)
 	{
 		$data['title'] = "Inleveren";

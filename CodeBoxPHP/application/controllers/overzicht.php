@@ -2,6 +2,7 @@
 session_start(); //we need to call PHP's session object to access it through CI
 class Overzicht extends CI_Controller 
 {
+	//constructor
 	function __construct()
 	{
 		parent::__construct();
@@ -9,6 +10,7 @@ class Overzicht extends CI_Controller
 		$this->load->model('user','',TRUE);
 		$this->load->helper(array('form'));
 	}
+	//Calls the primary view, which handles the screen for the 'docent' and the 'student', and loading the views accordingly.
 	function index()
 	{
 		$data['title'] = "Overzicht";
@@ -38,6 +40,7 @@ class Overzicht extends CI_Controller
 			redirect('login', 'refresh');
 		}
 	}
+	//Mails all users of a subject who have not delivered their package on this site yet.
 	function mailusers($subjectid)
 	{
 		$data['title'] = "Email";
@@ -65,6 +68,7 @@ class Overzicht extends CI_Controller
 			redirect('login', 'refresh');
 		}
 	}
+	//Function which handles the overviewtype for the teacher accordingly to his/her choice.
 	function choice($studyid)
 	{
 		if(is_numeric($studyid))
@@ -100,6 +104,7 @@ class Overzicht extends CI_Controller
 			redirect('overzicht', 'refresh');
 		}
 	}
+	//Loads a list containing all students for the specified study.
 	function studentlist($studyid)
 	{
 		if(is_numeric($studyid))
@@ -134,6 +139,7 @@ class Overzicht extends CI_Controller
 			redirect('overzicht', 'refresh');
 		}
 	}
+	//Loads all information of a student in the specified study. This checks if the user has delivered his stuff or not.
 	function student($studyid,$studentname)
 	{
 		if(is_numeric($studyid) && $this->user->userexists($studentname))
@@ -170,6 +176,7 @@ class Overzicht extends CI_Controller
 			redirect('overzicht', 'refresh');
 		}
 	}
+	//Loads an overview of all subjects for the specified study.
 	function subjectlist($studyid)
 	{
 		if(is_numeric($studyid))
@@ -205,6 +212,7 @@ class Overzicht extends CI_Controller
 			redirect('overzicht', 'refresh');
 		}
 	}
+	//Loads all users of a specified subject in the specified study.
 	function userlistbysubject($studyid,$subjectid)
 	{	
 		if($this->session->userdata('logged_in'))
@@ -243,6 +251,7 @@ class Overzicht extends CI_Controller
 			redirect('login', 'refresh');
 		}
 	}
+	//Redirects to the downloadpage where the teacher is able to download the specified file.
 	function subject($studyid,$studentname,$subjectid)
 	{
 		if(is_numeric($studyid) && !is_numeric($studentname) && is_numeric($subjectid))

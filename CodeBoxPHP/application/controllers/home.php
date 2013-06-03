@@ -2,12 +2,14 @@
 session_start(); //we need to call PHP's session object to access it through CI
 class Home extends CI_Controller 
 {
+	//constructor
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->model('role','',TRUE);
 		$this->load->model('user','',TRUE);
 	}
+	//Home function, called the home view for a short overview.
 	function index()
 	{
 		$data['title'] = "Home";

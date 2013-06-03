@@ -8,7 +8,7 @@ class VerifyLogin extends CI_Controller
 		$this->load->model('user','',TRUE);
 		$this->load->model('role','',TRUE);
 	}
-
+	//Handles the login form.
 	function index()
 	{
 		$this->load->library('form_validation');
@@ -23,6 +23,8 @@ class VerifyLogin extends CI_Controller
 			redirect('home', 'refresh');
 		}
 	}
+	//Checks if the user is valid or not and entered the correct password.
+	//Also handles adminaccounts which are being redirected to the local database for auth.
 	function check_database($password)
 	{
 		$username = $this->input->post('username');

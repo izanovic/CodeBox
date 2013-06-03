@@ -6,6 +6,7 @@ class Profiel extends CI_Controller
 	{
 		parent::__construct();
 	}
+	//Loads the profilepage for the user.
 	function index()
 	{
 		$data['title'] = "Profiel";

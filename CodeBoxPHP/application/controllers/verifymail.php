@@ -8,7 +8,7 @@ class VerifyMail extends CI_Controller
 		$this->load->model('user','',TRUE);
 		//$this->load->model('role','',TRUE);
 	}
-
+	//Sends the mail to the specified users, this sends a mail to the specified NHL users.
 	function index()
 	{
 		$this->load->library('form_validation');
@@ -28,7 +28,6 @@ class VerifyMail extends CI_Controller
 		}
 		else
 		{
-			//Email
 			$onderwerp = $this->input->post('onderwerp');
 			$bericht= $this->input->post('mail');
 			$this->load->library('email');

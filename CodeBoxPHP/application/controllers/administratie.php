@@ -2,12 +2,14 @@
 session_start(); //we need to call PHP's session object to access it through CI
 class Administratie extends CI_Controller 
 {
+	//Constructor of the controller
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->model('user','',TRUE);
 		$this->load->model('globalfunc','',TRUE);
 	}
+	//Loads the primary view for the administration panel.
 	function index()
 	{
 		$data['title'] = "Administratie";
@@ -34,6 +36,7 @@ class Administratie extends CI_Controller
 			redirect('home', 'refresh');
 		}
 	}
+	//Called to load the users from LDAP into our database. This function is very resource intensive, so use with care.
 	function addusers()
 	{
 		$data['title'] = "Administratie";
@@ -71,6 +74,7 @@ class Administratie extends CI_Controller
 			redirect('home', 'refresh');
 		}
 	}
+	//Cleans up entries from the database which are no longer relevant [such as deleted files].
 	function cleanupdatabase()
 	{
 		$data['title'] = "Administratie";
@@ -85,6 +89,7 @@ class Administratie extends CI_Controller
 				$this->load->view('templates/header', $data);
 				$this->load->view('templates/menu', $data);
 				$this->globalfunc->cleanupdbentries();
+				$this->user->removeinactiveusers();
 				echo("<script>alert('Succesvol opgeschoond!');</script>");
 				redirect('administratie', 'refresh');
 				$this->load->view('templates/footer', $data);
@@ -99,6 +104,7 @@ class Administratie extends CI_Controller
 			redirect('home', 'refresh');
 		}	
 	}
+	//Parser using XML to load all subjects into the database.
 	function addsubjects()
 	{
 		$data['title'] = "Administratie";

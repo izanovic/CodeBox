@@ -12,7 +12,7 @@ class Upload extends CI_Controller {
 	{
 		$this->load->view('upload_view', array('error' => ' ' ));
 	}
-
+	//Uploads the file to the specified position.
 	function do_upload()
 	{
 		$config['upload_path'] = '../../files/';
