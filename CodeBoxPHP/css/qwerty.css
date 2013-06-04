@@ -5,10 +5,14 @@ body
 }
 
 a{
-	color: #FFF;
+	color: #388E8E;
 	text-decoration: none;
 	text-transform: uppercase;
 	letter-spacing: 2px;
+}
+h1,h2
+{
+	margin: 0 0 0 240px;
 }
 
 img{

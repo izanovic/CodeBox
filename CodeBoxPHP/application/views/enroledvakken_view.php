@@ -10,21 +10,22 @@ Welkom, deze vakken zijn beschikbaar voor uw opleiding.
 		$vaknaam = $row->name;
 		$alreadysend = $this->user->isalreadysend($username,$row->subjectID);
 		$isexpired = $this->globalfunc->expiredsubject($row->subjectID);
+		$base = base_url() . "index.php";
+		$basecss = base_url();
 		if(!$isexpired)
 		{
-			$base = base_url() . "index.php";
 			if($alreadysend)
 			{
-				echo "<li>$vaknaam - Voldaan. [<a href='$base/inleveren/edit/$row->subjectID/'>aanpassen</a>]</li>";
+				echo "<li><img src='$basecss/images/done.jpg' alt='Voldaan'> $vaknaam - Voldaan. [<a href='$base/inleveren/edit/$row->subjectID/'>aanpassen</a>]</li>";
 			}
 			else
 			{
-				echo "<li>$vaknaam - Niet voldaan! <a href='$base/inleveren/vak/$row->subjectID'>[Inleveren]</a></li>";
+				echo "<li><img src='$basecss/images/notdone.jpg' alt='Niet voldaan'> $vaknaam - Niet voldaan! <a href='$base/inleveren/vak/$row->subjectID'>[Inleveren]</a></li>";
 			}
 		}
 		else
 		{
-			echo("<li>$vaknaam - Deadline is overschreden. [Inleveren en aanpassen niet mogelijk]</li>");
+			echo("<li><img src='$basecss/images/expired.jpg' alt='Verlopen!'>$vaknaam - Deadline is overschreden. [Inleveren en aanpassen niet mogelijk]</li>");
 		}
 		$count++;
     }

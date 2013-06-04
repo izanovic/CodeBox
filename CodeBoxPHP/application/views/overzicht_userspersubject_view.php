@@ -64,7 +64,7 @@
 		echo("Niemand hoeft meer iets in te leveren.<br/>");
 	}
 	$base = base_url() . "index.php";
-	echo("<div><a href='$base/overzicht/mailusers/$subjectid'>Stuur herinnering</a></div>");
+	echo("<br/><div><a href='$base/overzicht/mailusers/$subjectid'>Stuur herinnering</a></div>");
 
 ?></div>
 

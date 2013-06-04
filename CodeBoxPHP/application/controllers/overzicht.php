@@ -259,7 +259,7 @@ class Overzicht extends CI_Controller
 			if($this->session->userdata('logged_in'))
 			{
 				$session_data = $this->session->userdata('logged_in');
-				if($session_data['role'] != "student" && $session_data['role'] != "gast")
+				if($session_data['role'] == "docent" || $session_data['role'] == "administrator")
 				{
 					$data['student_full_name'] = $this->user->getfullnamefromdb($studentname);
 					$data['subject_name'] = $this->globalfunc->getsubjectnamefromid($subjectid);

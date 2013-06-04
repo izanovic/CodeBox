@@ -6,18 +6,21 @@ class VerifyMail extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('user','',TRUE);
-		//$this->load->model('role','',TRUE);
 	}
 	//Sends the mail to the specified users, this sends a mail to the specified NHL users.
-	function index()
+	function index($subjectid)
+	{
+		//
+	}
+	function handle($subjectid)
 	{
 		$this->load->library('form_validation');
 	    $this->form_validation->set_rules('onderwerp', 'onderwerp', 'trim|required|xss_clean');
 	    $this->form_validation->set_rules('mail', 'mailcontent', 'trim|required|xss_clean');
+	    $session_data = $this->session->userdata('logged_in');
 		if($this->form_validation->run() == FALSE)
 		{
 			$data['title'] = "Email";
-			$session_data = $this->session->userdata('logged_in');
 			$data['username'] = $session_data['username'];
 			$rolename = $session_data['role'];
 			$data['rolename'] = $rolename;
@@ -32,21 +35,30 @@ class VerifyMail extends CI_Controller
 			$bericht= $this->input->post('mail');
 			$this->load->library('email');
 			$this->email->set_newline("\r\n");
-
+			$username = $session_data['username'];
 			if($session_data['role'] == "administrator")
 			{
 				$this->email->from('Codeboxmasters@gmail.com', 'CodeBox Administratie');
 			}
 			else
 			{
-				$this->email->from('Codeboxmasters@gmail.com', $this->user->getemailfromldap($data['username']));
+				$this->email->from('Codeboxmasters@gmail.com', $this->user->getemailfromldap($username));
 			}
-			
-			$this->email->to(_undefined_);		
-			//moet nog met een leuk forloopje worden behandeld! Alleen moet voorkomen dat niet heel NHL een leuk mailtje krijgt.
+			$mails = "";
+			$result = $this->user->returnusersfromsubject($subjectid);
+			foreach($result as $row)
+			{
+				if(!$this->user->isalreadysend($row->username,$subjectid))
+				{
+					$mails = $mails . "," . $this->user->getemail($username);
+				}
+			}
+			$mails = substr($mails, 1);
+			$this->email->to($mails);
+			//echo("<script>alert('" . $mails . "');</script>");
+
 			$this->email->subject($onderwerp);		
 			$this->email->message($bericht);
-
 			if($this->email->send())
 			{
 				echo("<script>alert('De email is verstuurd!')</script>");

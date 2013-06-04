@@ -102,6 +102,29 @@ Class User extends CI_Model
 		require_once("ldap.php");
 		return LDAP::getmail($username);
 	}
+	//Returns all users who did not deliver their package yet to CodeBox.
+	function returnusersfromsubject($subjectid)
+	{
+		$query = $this->db->query("SELECT studyid FROM subject WHERE subjectid = '$subjectid'");
+		$result = $query->result();
+		$studyid = -1;
+		foreach($result as $row)
+		{
+			$studyid = $row->studyid;
+		}
+		$query2 = $this->db->query("SELECT username FROM users WHERE studyid = '$studyid'");
+		return $query2->result();
+	}
+	//gets email from database
+	function getemail($username)
+	{
+		$query = $this->db->query("SELECT email FROM users WHERE username = '$username' LIMIT 1");
+		$result = $query->result();
+		foreach($result as $row)
+		{
+			return $row->email;
+		}
+	}
 	//Checks if a study exists in the database.
 	function studyexists($studyname)
 	{
@@ -141,7 +164,8 @@ Class User extends CI_Model
 			}
 			$this->load->model('globalfunc','',TRUE);
 			$datenow = $this->globalfunc->todaydateindbformat();
-			$query = $this->db->query("INSERT INTO users (username,fullname,password,studyid,lastactive) VALUES ('$username','$fullname','geen wachtwoord','$studyid', '$datenow')");
+			$mail = $this->user->getemail($username);
+			$query = $this->db->query("INSERT INTO users (username,fullname,password,studyid,lastactive,email) VALUES ('$username','$fullname','geen wachtwoord','$studyid', '$datenow','$mail')");
 		}
 	}
 	//Removes inactive users from the database.
@@ -195,7 +219,9 @@ Class User extends CI_Model
 	{
 		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
-		return LDAP::getldaprole($username);
+		$fullname = LDAP::getldaprole($username);
+		$fullname = explode(' - ',$fullname);
+		return $fullname[1];
 	}
 	//Checks if a file is send or not.
 	function isalreadysend($username,$subjectid)
