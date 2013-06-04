@@ -1,6 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-session_start(); //we need to call PHP's session object to access it through CI
-class Logout extends CI_Controller 
+class Logout extends MY_Controller 
 {
 	function __construct()
 	{
@@ -10,16 +9,9 @@ class Logout extends CI_Controller
 	function index()
 	{
 		$data['title'] = "Uitloggen";
-		if($this->session->userdata('logged_in'))
-		{
-			$this->session->unset_userdata('logged_in');
-			session_destroy();
-			redirect('login', 'refresh');
-		}
-		else
-		{
-			redirect('login', 'refresh');
-		}
+		$this->session->unset_userdata('logged_in');
+		session_destroy();
+		redirect('login', 'refresh');
 	}
 }
 

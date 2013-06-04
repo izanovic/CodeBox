@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class VerifyMail extends CI_Controller 
+class VerifyMail extends MY_Controller 
 {
 	function __construct()
 	{

@@ -1,6 +1,6 @@
 <?php
-
-class Upload extends CI_Controller {
+class Upload extends MY_Controller 
+{
 
 	function __construct()
 	{

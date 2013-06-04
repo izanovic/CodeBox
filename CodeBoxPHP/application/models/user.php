@@ -1,5 +1,5 @@
 <?php
-define('_includepath_',';c:/xampp/htdocs/includes');
+define('_includepath_','../includes');
 ini_set('MAX_EXECUTION_TIME', 3600);
 Class User extends CI_Model
 {
@@ -167,6 +167,31 @@ Class User extends CI_Model
 			$mail = $this->user->getemail($username);
 			$query = $this->db->query("INSERT INTO users (username,fullname,password,studyid,lastactive,email) VALUES ('$username','$fullname','geen wachtwoord','$studyid', '$datenow','$mail')");
 		}
+	}
+	//Sets a password for an user
+	function setuserpassword($username,$password)
+	{
+		$pass = SHA1($password);
+		$this->db->query("UPDATE users SET password='$pass' WHERE username = '$username'");
+		return true;
+	}
+	//Generates a random password.
+	function randompassword($length) 
+	{
+	    $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+	    $pass = array(); //remember to declare $pass as an array
+	    $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+	    for ($i = 0; $i < $length; $i++) {
+	        $n = rand(0, $alphaLength);
+	        $pass[] = $alphabet[$n];
+	    }
+	    return implode($pass); //turn the array into a string
+	}
+	//Returns a nice and shiny array full of the users in our database, how nice!
+	function getallusersfromdb()
+	{
+		$query = $this->db->query("SELECT * FROM users ORDER BY studyid,username");
+		return $query->result();
 	}
 	//Removes inactive users from the database.
 	function removeinactiveusers()
