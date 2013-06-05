@@ -7,7 +7,7 @@
 				<a href="<?=base_url() . 'index.php'?>/inleveren"><span>Inleveren</span></a>
 				<a href="<?=base_url() . 'index.php'?>/overzicht"><span>Overzicht</span></a>
 				<a href="<?=base_url() . 'index.php'?>/profiel"><span>Mijn Profiel</span></a>
-				<?php if($rolename == 'docent' || $rolename == 'administrator')
+				<?php if($rolename == 'administrator')
 				{		
 					$base = base_url() . 'index.php';
 					echo("<a href='$base/administratie'><span>Administratie</span></a>");

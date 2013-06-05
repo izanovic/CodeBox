@@ -1,7 +1,7 @@
 <h3>Selecteer uw vak:</h3>
 Welkom, deze vakken zijn beschikbaar voor uw opleiding.
 <br/><br/>
-<div>
+<div class = "datagrid">
 
 <?php
 	$result = $this->user->subjects($username);
@@ -43,4 +43,5 @@ Welkom, deze vakken zijn beschikbaar voor uw opleiding.
 	    echo("</table>");
 	}
 ?>
-</div>
+</div><br/>
+<input type = "button" name = "ReturnButton" onclick = "history.go(-1);" value="Terug"/>

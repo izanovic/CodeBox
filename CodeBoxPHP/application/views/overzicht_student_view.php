@@ -2,7 +2,7 @@
 
 <h3><?php echo "Het is nu: " . $datenow; ?></h3>
 
-<div>
+<div class = "datagrid">
 <?php
 	$result = $this->user->subjects($username);
 	$count = count($result);

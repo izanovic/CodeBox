@@ -1,6 +1,6 @@
 <h3>Selecteer studierichting:</h3>
-
-<table border="1">
+<div class = "datagrid">
+<table>
 <tr>
 <th>Studie</th>
 </tr>

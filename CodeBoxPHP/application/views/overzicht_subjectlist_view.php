@@ -1,7 +1,7 @@
 <h3>Vakkenoverzicht</h3>
 
 
-<div>
+<div class = "datagrid">
 <?php
 	$result = $this->globalfunc->studysubjects($studyid);
 	if(count($result) == 0) { echo ("Er zijn geen vakken om weer te geven!"); } else

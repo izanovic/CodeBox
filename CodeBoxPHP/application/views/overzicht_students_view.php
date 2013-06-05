@@ -1,6 +1,6 @@
 <h3>Selecteer leerling:</h3>
 
-
+<div class = "datagrid">
 <?php 
 	$result = $this->globalfunc->students($studyid);
 	$count = count($result);
@@ -22,5 +22,6 @@
 		echo("</table>");
 	}
 ?>
-<br/><br/>
+</div>
+<br/>
 <input type = "button" name = "ReturnButton" onclick = "history.go(-1);" value="Terug"/>

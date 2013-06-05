@@ -1,6 +1,6 @@
 <h3>Vakken voor deze leerling:</h3>
 
-<div>
+<div class = "datagrid">
 <?php
 	$result = $this->user->subjects($studentname);
 	$count = count($result);
@@ -38,7 +38,7 @@
 	    }
 	 }
 ?>
-</div>
 </table>
+</div>
 <br/>
 <input type = "button" name = "ReturnButton" onclick = "history.go(-1);" value="Terug"/>

@@ -23,7 +23,7 @@
 
 <h3>Ingeleverd:</h3>
 
-<div><?php 
+<div class = "datagrid"><?php 
 
 	$result = $this->globalfunc->getstudentsinsubject($studyid,$subjectid);
 	$count = 0;
@@ -40,18 +40,18 @@
 			$count++;
 		}
 	}
-	echo("<tr><td>Leeg</td><td>-</td></tr></table><br/>");
-	echo("</table>");
 	if($count == 0)
 	{
 		echo("Niemand heeft iets voor dit vak ingeleverd!");
+		echo("<tr><td>Leeg</td><td>-</td></tr></table><br/>");	
 	}
+	echo("</table>");	
 
 ?></div>
 
 <h3>Nog niet ingeleverd:</h3>
 
-<div><?php 
+<div id = "printablediv" class = "datagrid"><?php 
 
 	$result = $this->globalfunc->getstudentsinsubject($studyid,$subjectid);
 	$count = 0;
@@ -66,17 +66,15 @@
 			$count++;
 		}
 	}
-	echo("</table>");
 	if($count == 0)
 	{
+		echo("<tr><td>Leeg</td><td>-</td></tr></table><br/>");
 		echo("Niemand hoeft meer iets in te leveren.<br/>");
 	}
+	echo("</table>");
 	$base = base_url() . "index.php";
 	echo("<br/><div><a href='$base/overzicht/mailusers/$subjectid'>Stuur herinnering</a></div>");
 
 ?></div>
-
-
-
 <br/>
-<input type = "button" name = "ReturnButton" onclick = "history.go(-1);" value="Terug"/>
+<input type = "button" name = "PrintButton" onclick = "javascript:printDiv('printablediv')" value="Lijst afdrukken"/><input type = "button" name = "ReturnButton" onclick = "history.go(-1);" value="Terug"/>
