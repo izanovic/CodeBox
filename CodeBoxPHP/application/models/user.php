@@ -225,9 +225,8 @@ Class User extends CI_Model
 		$result = $query->result();
 		foreach($result as $row)
 		{	
-			$result = $row->Fullname;
-			$result = explode(' - ', $result);
-			return ucfirst($result[1]);
+			return ucfirst($row->Fullname);
+			//$result = explode(' - ', $result);
 		}
 	}
 	//Returns the user's fullname from LDAP.
@@ -237,16 +236,16 @@ Class User extends CI_Model
 		require_once("ldap.php");
 		$splittest = explode('_',$username);
 		if($splittest[0] == "admin") return $splittest[1];
-		return LDAP::getfullusername($username);
+		$result = LDAP::getfullusername($username);
+		if($result == "") return $username;
+		return $result;
 	}
 	//Returns the role for the user from LDAP.
 	function getrolefromldap($username)
 	{
 		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
-		$fullname = LDAP::getldaprole($username);
-		$fullname = explode(' - ',$fullname);
-		return $fullname[1];
+		return LDAP::getldaprole($username);
 	}
 	//Checks if a file is send or not.
 	function isalreadysend($username,$subjectid)

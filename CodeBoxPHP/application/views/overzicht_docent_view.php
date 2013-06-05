@@ -1,5 +1,9 @@
 <h3>Selecteer studierichting:</h3>
 
+<table border="1">
+<tr>
+<th>Studie</th>
+</tr>
 <div>
 <?php
 	$result = $this->globalfunc->studies();
@@ -7,9 +11,11 @@
 	{
 		$name = $row->name;
 		$base = base_url();
-		echo("<li><a href='$base" . "index.php/overzicht/choice/$row->id'>$name</a></li>");
+		//echo("<li><a href='$base" . "index.php/overzicht/choice/$row->id'>$name</a></li>");
+		echo("<tr><td><a href='$base" . "index.php/overzicht/choice/$row->id'>$name</a></td></tr>");
 	}
 ?>
+</table>
 </div>
 
 <br/>

@@ -27,16 +27,21 @@
 
 	$result = $this->globalfunc->getstudentsinsubject($studyid,$subjectid);
 	$count = 0;
+	echo("<table border='1'><tr><th>Leerling</th><th>Download</th></tr>");
 	foreach($result as $row)
 	{
 		$alreadysend = $this->user->isalreadysend($row->username,$subjectid);
+		$fullname = $this->user->getfullnamefromdb($row->username);
 		$base = base_url() . "index.php";
 		if($alreadysend)
 		{
-			echo("<li><a href='$base/overzicht/subject/$studyid/$row->username/$subjectid'>$row->username - Download bestand.</a>");
+			//echo("<li><a href='$base/overzicht/subject/$studyid/$row->username/$subjectid'>$row->username - Download bestand.</a>");
+			echo("<tr><td>$fullname</td><td><a href='$base/overzicht/subject/$studyid/$row->username/$subjectid'>Download</a></td></tr>");
 			$count++;
 		}
 	}
+	echo("<tr><td>Leeg</td><td>-</td></tr></table><br/>");
+	echo("</table>");
 	if($count == 0)
 	{
 		echo("Niemand heeft iets voor dit vak ingeleverd!");
@@ -50,15 +55,18 @@
 
 	$result = $this->globalfunc->getstudentsinsubject($studyid,$subjectid);
 	$count = 0;
+	echo("<table border='1'><tr><th>Leerling</th></tr>");
 	foreach($result as $row)
 	{
 		$alreadysend = $this->user->isalreadysend($row->username,$subjectid);
+		$fullname = $this->user->getfullnamefromdb($row->username);
 		if(!$alreadysend)
 		{
-			echo("<li>$row->fullname</li>");
+			echo("<tr><td>$fullname</td></tr>");
 			$count++;
 		}
 	}
+	echo("</table>");
 	if($count == 0)
 	{
 		echo("Niemand hoeft meer iets in te leveren.<br/>");

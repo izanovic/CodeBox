@@ -15,11 +15,21 @@ h1,h2
 	margin: 0 0 0 240px;
 }
 
-img{
+img
+{
 
 	padding:10px;
 }
 
+table, td, th
+{
+	border:1px solid green;
+}
+th
+{
+	background-color:green;
+	color:white;
+}
 .hs-menu{
 	position: fixed;
 	background: #131313;
