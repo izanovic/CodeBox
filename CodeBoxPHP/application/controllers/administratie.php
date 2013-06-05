@@ -33,12 +33,22 @@ class Administratie extends MY_Controller
 		$data['rolename'] = $rolename;
 		$this->load->view('templates/header', $data);
 		$this->load->view('templates/menu', $data);
-		$result = $this->user->allusers();
+		//get all students
+		$result = $this->user->allstudents();
 		foreach($result as $row)
 		{
 			if($row["uid"][0] != '')
 			{
-				$this->user->adduserifnotexists($row["uid"][0]);
+				$this->user->adduserifnotexists($row["uid"][0],'geen wachtwoord');
+			}
+		}
+		//get all teachers
+		$result2 = $this->user->allteachers();
+		foreach($result2 as $row)
+		{
+			if($row["uid"][0] != '')
+			{
+				$this->user->adduserifnotexists($row["uid"][0],'geen wachtwoord');
 			}
 		}
 		$this->user->removeinactiveusers();
@@ -50,6 +60,7 @@ class Administratie extends MY_Controller
 	function cleanupdatabase()
 	{
 		$data['title'] = "Administratie";
+		$session_data = $this->session->userdata('logged_in');
 		$data['username'] = $session_data['username'];
 		$rolename = $session_data['role'];
 		$data['rolename'] = $rolename;

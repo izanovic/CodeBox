@@ -1,5 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+define('_useLDAP_',false);
+
 class VerifyLogin extends CI_Controller 
 {
 	function __construct()
@@ -27,38 +29,81 @@ class VerifyLogin extends CI_Controller
 	//Also handles adminaccounts which are being redirected to the local database for auth.
 	function check_database($password)
 	{
-		$username = $this->input->post('username');
-		$result = $this->user->login($username, $password);
-		if($result)
+		if(_useLDAP_)
 		{
-			$admtest = explode('_',$username);
-			if($admtest[0] == 'admin')
+			$username = $this->input->post('username');
+			$result = $this->user->login($username, $password);
+			if($result)
 			{
-				$sess_array = array
-				(
-					'username' => strtolower($username),
-					'role' => 'administrator'
-				);
-				$this->session->set_userdata('logged_in', $sess_array);
-				return true;
-			}
+				$admtest = explode('_',$username);
+				if($admtest[0] == 'admin')
+				{
+					$sess_array = array
+					(
+						'username' => strtolower($username),
+						'activated' => $this->user->isactivated($username),
+						'role' => 'administrator'
+					);
+					$this->session->set_userdata('logged_in', $sess_array);
+					return true;
+				}
+				else
+				{
+					$sess_array = array();
+					$sess_array = array(
+						//'id' => $row->id,
+						'username' => strtolower($username),
+						'activated' => $this->user->isactivated($username),
+						'role' => $this->user->getrolefromdb($username)
+						);
+					$this->session->set_userdata('logged_in', $sess_array);
+					$this->user->adduserifnotexists($username,$password);
+					return true;
+				}
+			}	
 			else
 			{
-				$sess_array = array();
-				$sess_array = array(
-					//'id' => $row->id,
-					'username' => strtolower($username),
-					'role' => $this->user->getrolefromldap($username)
-					);
-				$this->session->set_userdata('logged_in', $sess_array);
-				$this->user->adduserifnotexists($username);
-				return true;
+				$this->form_validation->set_message('check_database', 'Wachtwoord en/of gebruikersnaam is onjuist!');
+				return false;
 			}
-		}	
+		}
 		else
 		{
-			$this->form_validation->set_message('check_database', 'Wachtwoord en/of gebruikersnaam is onjuist!');
-			return false;
+			$username = $this->input->post('username');
+			$result = $this->user->loginwithoutldap($username, $password);
+			if($result)
+			{
+				$admtest = explode('_',$username);
+				if($admtest[0] == 'admin')
+				{
+					$sess_array = array
+					(
+						'username' => strtolower($username),
+						'activated' => $this->user->isactivated($username),
+						'role' => 'administrator'
+					);
+					$this->session->set_userdata('logged_in', $sess_array);
+					//echo("<script>alert('ZOOI: " . $sess_array['activated'] . "=" . $this->user->isactivated($username) . "');</script>");
+					return true;
+				}
+				else
+				{
+					$sess_array = array();
+					$sess_array = array(
+						//'id' => $row->id,
+						'username' => strtolower($username),
+						'activated' => $this->user->isactivated($username),
+						'role' => $this->user->getrolefromdb($username)
+						);
+					$this->session->set_userdata('logged_in', $sess_array);
+					return true;
+				}
+			}	
+			else
+			{
+				$this->form_validation->set_message('check_database', 'Wachtwoord en/of gebruikersnaam is onjuist!');
+				return false;
+			}
 		}
 	}
 }

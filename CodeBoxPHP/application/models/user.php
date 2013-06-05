@@ -3,6 +3,59 @@ define('_includepath_','../includes');
 ini_set('MAX_EXECUTION_TIME', 3600);
 Class User extends CI_Model
 {
+	//Does the same as login, but now with the local database
+	function loginwithoutldap($username,$password)
+	{
+		$this -> db -> select('username, password');
+		$this -> db -> from('users');
+		$this -> db -> where('username', $username);
+		$this -> db -> where('password', SHA1($password));
+		$this -> db -> limit(1);
+		$query = $this -> db -> get();
+
+		if($query -> num_rows() == 1)
+		{
+		    	$date = time();
+		    	$this->db->query("UPDATE users SET lastactive = '$date' WHERE username = '$username'");
+				return true;
+		}
+	    else
+		{
+			return false;
+		}
+	}
+	//Activates a local account
+	function activateaccount($username,$password)
+	{
+		$pass = SHA1($password);
+		$this->db->query("UPDATE users SET password = '$pass',activated=1 WHERE username = '$username'");
+		return true;
+	}
+	//Returns the role from the local database
+	function getrolefromdb($username)
+	{
+		$query = $this->db->query("SELECT roles.RoleName FROM users,roles WHERE users.username = '$username' AND users.roleid = roles.roleid");
+		foreach($query->result() as $row)
+		{
+			return $row->RoleName;
+		}
+	}
+	//Checks if the user has logged in and changed their password already. Returns a number!
+	function isactivated($username)
+	{
+		$query = $this->db->query("SELECT activated FROM users WHERE username = '$username' LIMIT 1");
+		foreach($query->result() as $row)
+		{
+			if($row->activated == 1)
+			{
+				return "ja";
+			}
+			else
+			{
+				return "nee";
+			}
+		}
+	}
 	//Checks if the credentials are correct, using LDAP or local database, according to the username.
 	function login($username, $password)
 	{
@@ -145,14 +198,15 @@ Class User extends CI_Model
 		return $this->userexitsindatabase($username);
 	}
 	//Adds user if it does not exists in our database.
-	function adduserifnotexists($username)
+	function adduserifnotexists($username,$password)
 	{
 		if(!$this->userexists($username))
 		{
 			$studyname = ucfirst(strtolower($this->getstudyfromldap($username)));
 			$fullname = $this->getfullnamefromldap($username);
 			$studyid = -1;
-			if(!$this->studyexists($studyname) && $this->getrolefromldap($username))
+			$rolename = $this->getrolefromldap($username);
+			if(!$this->studyexists($studyname) && $rolename == "student")
 			{
 				$this->db->query("INSERT INTO study (name) VALUES ('$studyname')");
 			}
@@ -162,10 +216,18 @@ Class User extends CI_Model
 			{
 				$studyid = $row->id;
 			}
+			$roleid = -1;
+			$query2 = $this->db->query("SELECT RoleID FROM roles WHERE RoleName = '$rolename' LIMIT 1");
+			$result2 = $query2->result();
+			foreach($result2 as $row2)
+			{
+				$roleid = $row->RoleID;
+			}
 			$this->load->model('globalfunc','',TRUE);
 			$datenow = $this->globalfunc->todaydateindbformat();
 			$mail = $this->user->getemail($username);
-			$query = $this->db->query("INSERT INTO users (username,fullname,password,studyid,lastactive,email) VALUES ('$username','$fullname','geen wachtwoord','$studyid', '$datenow','$mail')");
+			$pass = SHA1($password);
+			$query = $this->db->query("INSERT INTO users (username,fullname,password,studyid,lastactive,email,activated,roleid) VALUES ('$username','$fullname','$pass','$studyid', '$datenow','$mail',0,'$roleid')");
 		}
 	}
 	//Sets a password for an user
@@ -313,11 +375,18 @@ Class User extends CI_Model
 		return $subjectquery->result();
 	}
 	//Returns all users from LDAP.
-	function allusers()
+	function allstudents()
 	{
 		ini_set("include_path", _includepath_);
 		require_once("ldap.php");
-		return LDAP::ldapallusers();
+		return LDAP::ldapallstudents();
+	}
+	//Returns all teachers from LDAP.
+	function allteachers()
+	{
+		ini_set("include_path", _includepath_);
+		require_once("ldap.php");
+		return LDAP::ldapallteachers();
 	}
 }
 ?>
