@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-define('_useLDAP_',false);
+//define('_useLDAP_',false);
 
 class VerifyLogin extends CI_Controller 
 {
@@ -18,7 +18,7 @@ class VerifyLogin extends CI_Controller
 	    $this->form_validation->set_rules('password', 'password', 'trim|required|xss_clean|callback_check_database');
 		if($this->form_validation->run() == FALSE)
 		{
-			$this->load->view('login_view',array('available' => $this->user->ldapavailable()));
+			$this->load->view('login_view',array('available' => _useLDAP_)); //$this->user->ldapavailable()
 		}
 		else
 		{

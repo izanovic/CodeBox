@@ -13,7 +13,7 @@ class Login extends CI_Controller
 		{
 			$this->load->model('user','',TRUE);
 			$this->load->helper(array('form'));
-			$this->load->view('login_view',array('available' => $this->user->ldapavailable()));
+			$this->load->view('login_view',array('available' => _useLDAP_));
 		}
 		else
 		{
