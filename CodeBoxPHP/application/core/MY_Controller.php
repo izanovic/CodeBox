@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-define('_useLDAP_',false);
+define('_useLDAP_',true);
 session_start(); //we need to call PHP's session object to access it through CI
 class MY_Controller extends CI_Controller 
 {
@@ -17,10 +17,13 @@ class MY_Controller extends CI_Controller
 		}
 		else
 		{
-			$session_data = $this->session->userdata('logged_in');
-			if($session_data['activated'] == "nee")
+			if(!_useLDAP_)
 			{
-				redirect('activate','refresh');
+				$session_data = $this->session->userdata('logged_in');
+				if($session_data['activated'] == "nee")
+				{
+					redirect('activate','refresh');
+				}
 			}
 		}
 	}
