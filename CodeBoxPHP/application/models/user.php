@@ -216,16 +216,16 @@ Class User extends CI_Model
 			{
 				$studyid = $row->id;
 			}
-			$roleid = -1;
+			$roleid = 1;
 			$query2 = $this->db->query("SELECT RoleID FROM roles WHERE RoleName = '$rolename' LIMIT 1");
 			$result2 = $query2->result();
 			foreach($result2 as $row2)
 			{
-				$roleid = $row->RoleID;
+				$roleid = $row2->RoleID;
 			}
 			$this->load->model('globalfunc','',TRUE);
 			$datenow = $this->globalfunc->todaydateindbformat();
-			$mail = $this->user->getemail($username);
+			$mail = $this->user->getemailfromldap($username);
 			$pass = SHA1($password);
 			$query = $this->db->query("INSERT INTO users (username,fullname,password,studyid,lastactive,email,activated,roleid) VALUES ('$username','$fullname','$pass','$studyid', '$datenow','$mail',0,'$roleid')");
 		}

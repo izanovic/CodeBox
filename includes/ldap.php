@@ -40,6 +40,7 @@
 				$ldapUserString = $result[0]['dn'];
 				$ldapResult = ldap_bind($connection,$ldapUserString,$password);
 				$ldapAuthInfo = ($ldapResult? $result : false);
+				ldap_close($connection);
 				if(count($ldapAuthInfo) < 2)
 				{
 					return false;
@@ -67,6 +68,7 @@
 				$ldapUserString = $result[0]['dn'];
 				$ldapResult = @ldap_bind($connection,$ldapUserString,$password);
 				$ldapAuthInfo = ($ldapResult? $result : false);
+				ldap_close($connection);
 				return $ldapAuthInfo;
 		}
 		public static function isavailable()
@@ -99,6 +101,7 @@
 			$filter = "uid=" . $username;
 			$search = ldap_search($connection, $dn, $filter) or die ("Search failed");
 			$entries = ldap_get_entries($connection, $search);
+			ldap_close($connection);
 			return $entries[0]["mail"][0];
 		}
 		public static function getstudy($username)
@@ -117,6 +120,7 @@
 			$filter = "uid=" . $username;
 			$search = ldap_search($connection, $dn, $filter) or die ("Search failed");
 			$entries = ldap_get_entries($connection, $search);
+			ldap_close($connection);
 			return $entries[0]["ou"][0];
 		}
 		public static function getldaprole($username)
@@ -142,6 +146,7 @@
 				$filter = "uid=" . $username;
 				$search = ldap_search($connection, $dn, $filter);
 				$entries = ldap_get_entries($connection, $search);
+				ldap_close($connection);
 				if(count($entries) == 1)
 				{
 					return "gast";
@@ -173,9 +178,31 @@
 			$filter = "uid=" . $username;
 			$search = ldap_search($connection, $dn, $filter) or die ("Search failed");
 			$entries = ldap_get_entries($connection, $search);
+			ldap_close($connection);
 			return $entries[0]["cn"][0];
 		}
-		public static function ldapallusers()
+		public static function ldapallteachers()
+		{
+			set_time_limit(1200);
+			$connection = @ldap_connect("ldapmaster.nhl.nl",380) or die(ldap_error());
+			if($connection)
+			{
+				ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+				ldap_bind($connection);
+			}
+			else
+			{
+				die("error");
+			}
+
+			$dn = "ou=Engineering, ou=Techniek, ou=personeel,o=Noordelijke Hogeschool Leeuwarden,c=nl"; //ou=voltijd,ou=Informatica BA,ou=Techniek,ou=studenten,
+			$filter = "uid=*";
+			$search = ldap_search($connection, $dn, $filter);
+			$entries = ldap_get_entries($connection, $search);
+			ldap_close($connection);
+			return $entries;
+		}
+		public static function ldapallstudents()
 		{
 			set_time_limit(1200);
 			$connection = @ldap_connect("ldapmaster.nhl.nl",380) or die(ldap_error());
@@ -193,6 +220,7 @@
 			$filter = "uid=*";
 			$search = ldap_search($connection, $dn, $filter);
 			$entries = ldap_get_entries($connection, $search);
+			ldap_close($connection);
 			return $entries;
 		}
 	}
