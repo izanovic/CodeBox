@@ -5,6 +5,6 @@ alles heel traag verloopt, wacht tot de browser een melding geeft dat het inlade
 <br/>
 <br/>
 <a href="<?=base_url()?>index.php/administratie/addusers" onclick="return confirm('Zeker weten? Dit proces neemt minimaal 10 minuten in beslag!')">Alle gebruikers synchroniseren met LDAP.</a><br/>
-<a href="<?=base_url()?>index.php/administratie/addsubjects">Vakken inladen.</a><br/>
+<a href="<?=base_url()?>index.php/vakken_updaten">Vakken met behulp van XML inladen.</a><br/>
 <a href="<?=base_url()?>index.php/administratie/cleanupdatabase" onclick="return confirm('Zeker weten? Deze functie zorgt ervoor dat bestanden die niet meer in de files folder staan, worden opgeschoond in de database.')">Inactieve database entries opschonen.</a><br/>
 <a href="<?=base_url()?>index.php/administratie/generaterandompasswords" onclick="return confirm('Alle wachtwoorden worden op deze manier gewijzigd, zeker weten?')">Wachtwoorden opnieuw instellen en op beeld tonen.</a><br/>
