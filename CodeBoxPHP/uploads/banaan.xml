@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<courses>  
+    <course>  
+        <name>Analyse</name>
+		<shortname>ana</shortname>
+		<study>Informatica BA</study>
+        <description>Analyse </description>
+		<expire>24-01-2013 23:59</expire>
+   </course>
+    <course>  
+        <name>Programmeren1</name> 
+		<shortname>prog1</shortname>
+		<study>Informatica BA</study>
+        <description>Programmeren1</description>
+		<expire>24-01-2013 23:59</expire>
+   </course> 
+    <course>  
+        <name>Databases</name> 
+		<shortname>db</shortname>
+		<study>Informatica BA</study>
+        <description>Databases 1 </description>
+		<expire>24-01-2013 11:00</expire>
+   </course>
+    <course>  
+        <name>DiWi</name> 
+		<shortname>diwi</shortname>
+		<study>Informatica BA</study>
+        <description>Discrete Wiskunde </description>
+		<expire>24-01-2013 23:59</expire>
+   </course>
+    <course>  
+        <name>Cybercrime</name> 
+		<shortname>cyber</shortname>
+		<study>Informatica BA</study>
+        <description>Cybercrime</description>
+		<expire>10-06-2013 23:59:59</expire>
+   </course>  
+</courses>

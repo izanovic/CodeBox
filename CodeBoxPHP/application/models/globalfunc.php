@@ -15,7 +15,17 @@ Class Globalfunc extends CI_Model
 		{
 			return $row->name;
 		}
-	}/*
+	}
+	//Returns name of a study by its unique id.
+	function getstudyidfromname($studyname)
+	{
+		$query = $this->db->query("SELECT id FROM study WHERE name = '$studyname'");
+		foreach($query->result() as $row)
+		{
+			return $row->id;
+		}
+	}
+	/*
 	function getstudentnamefromid($studentid)
 	{
 		$query = $this->db->query("SELECT username FROM users WHERE id = '$studentid'");
